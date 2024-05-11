@@ -19,19 +19,18 @@ const events =  ref([
 
 <template>
   <q-page>
-    <div style="height:500px">
       <vue-cal
+        style = "height:800px"
         hide-view-selector
         hide-title-bar
         hide-weekends
-        :time-from="10 * 60"
-        :time-to="16 * 60"
+        :time-from="7 * 60"
+        :time-to="24 * 60"
         :disable-views="['years', 'year', 'month', 'day']"
         :editable-events="{ title: true, drag: true, resize: true, delete: true, create: true }"
         :events = "events"
         :drag-to-create-threshold="0">
       </vue-cal>
-    </div>
   </q-page>
 </template>
 

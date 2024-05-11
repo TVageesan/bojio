@@ -1,47 +1,37 @@
 <script setup>
-import { QCalendarDay, today } from '@quasar/quasar-ui-qcalendar/src/index.js'
-import '@quasar/quasar-ui-qcalendar/src/QCalendarVariables.sass'
-import '@quasar/quasar-ui-qcalendar/src/QCalendarTransitions.sass'
-import '@quasar/quasar-ui-qcalendar/src/QCalendarDay.sass'
-import NavigationBar from '../components/NavigationBar.vue'
-
-import { ref } from 'vue';
-
-const selectedDate = ref(today());
-
-const calendar = ref("calendar")
-
-const onToday = () => calendar.value.moveToToday();
-const onPrev = () => calendar.value.prev();
-const onNext = () => calendar.value.next();
+import VueCal from 'vue-cal'
+import 'vue-cal/dist/vuecal.css'
+import { ref } from 'vue'
+const events =  ref([
+  {
+    start: '2018-11-20 14:00',
+    end: '2018-11-20 17:30',
+    title: 'Boring event',
+    content: '<i class="icon material-icons">block</i><br>I am not draggable, not resizable and not deletable.',
+    class: 'blue-event',
+    deletable: true,
+    resizable: true,
+    draggable: true
+  },
+])
 </script>
 
 
 <template>
-  <div class="subcontent">
-    <navigation-bar
-      @today="onToday"
-      @prev="onPrev"
-      @next="onNext"
-    />
-
-    <div class="row justify-center">
-      <div style="display: flex; max-width: 800px; width: 100%; height: 400px;">
-        <q-calendar-day
-          ref="calendar"
-          v-model="selectedDate"
-          dark
-          animated
-          @change="(data) => console.log(data)"
-          @moved="(data) => console.log(data)"
-          @click-date="(data) => console.log(data)"
-          @click-time="(data) => console.log(data)"
-          @click-interval="(data) => console.log(data)"
-          @click-head-intervals="(data) => console.log(data)"
-          @click-head-day="(data) => console.log(data)"
-        />
-      </div>
+  <q-page>
+    <div style="height:500px">
+      <vue-cal
+        hide-view-selector
+        hide-title-bar
+        hide-weekends
+        :time-from="10 * 60"
+        :time-to="16 * 60"
+        :disable-views="['years', 'year', 'month', 'day']"
+        :editable-events="{ title: true, drag: true, resize: true, delete: true, create: true }"
+        :events = "events"
+        :drag-to-create-threshold="0">
+      </vue-cal>
     </div>
-  </div>
+  </q-page>
 </template>
 

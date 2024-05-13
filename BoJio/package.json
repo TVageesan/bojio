@@ -10,11 +10,16 @@
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
+    "server": "nodemon server/index.js",
     "build": "quasar build"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "@quasar/quasar-ui-qcalendar": "^4.0.0-beta.19",
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.0",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-cal": "^4.8.1",

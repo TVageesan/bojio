@@ -1,0 +1,6 @@
+Pages Needed:
+Landing Page - ask for login info
+Calendar - Show your own calendar, lets you add your time slot etc
+Community - Join, Leave, Create groups (ask for group key or smth to join?)
+Events - Show available nus events + facility avaialbility
+Booking - Show the group's shared calendar,  with free spots highlighted

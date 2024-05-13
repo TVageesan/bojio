@@ -21,6 +21,8 @@
     "express": "^4.19.2",
     "nodemon": "^3.1.0",
     "quasar": "^2.6.0",
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7",
     "vue": "^3.0.0",
     "vue-cal": "^4.8.1",
     "vue-router": "^4.0.0"

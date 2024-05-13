@@ -26,11 +26,12 @@ const events = [
 
 const router = express.Router()
 
-// define the home page route
+// get all events
 router.get('/', (req, res) => {
   res.send(events)
 })
 
+// get the user's events
 router.get('/:id', (req, res) => {
   res.send(events.filter(e => e.user_id == req.params.id))
 })

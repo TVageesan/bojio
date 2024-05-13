@@ -1,7 +1,8 @@
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./data.db',sqlite3.OPEN_READWRITE);
 
 const express = require('express')
 const app = express()
-
 
 var cors = require('cors');
 
@@ -24,3 +25,6 @@ app.use('/event',event)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+
+

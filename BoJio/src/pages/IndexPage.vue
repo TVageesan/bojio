@@ -4,18 +4,7 @@ import 'vue-cal/dist/vuecal.css'
 import { ref } from 'vue'
 import getEvents from 'src/api.js'
 
-const events =  ref([
-  {
-    start: '2018-11-20 14:00',
-    end: '2018-11-20 17:30',
-    title: 'Boring event',
-    content: '<i class="icon material-icons">block</i><br>I am not draggable, not resizable and not deletable.',
-    class: 'blue-event',
-    deletable: false,
-    resizable: false,
-    draggable: true
-  }
-])
+const events =  ref([])
 
 getEvents(1).then(e => events.value = e.data.map(data => ({
     start: data.start,
@@ -27,6 +16,7 @@ getEvents(1).then(e => events.value = e.data.map(data => ({
     resizable: true,
     draggable: true
 })));
+
 </script>
 
 

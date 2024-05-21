@@ -1,22 +1,9 @@
 <script setup>
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-import { ref } from 'vue'
-import getEvents from 'src/api.js'
+import { ref, inject } from 'vue'
 
-const events =  ref([])
-
-getEvents(1).then(e => events.value = e.data.map(data => ({
-    start: data.start,
-    end: data.end,
-    title: data.title,
-    content: data.content,
-    class: 'blue-event',
-    deletable: true,
-    resizable: true,
-    draggable: true
-})));
-
+const events = ref([]);
 </script>
 
 
@@ -34,4 +21,3 @@ getEvents(1).then(e => events.value = e.data.map(data => ({
     </vue-cal>
   </q-page>
 </template>
-

@@ -1,11 +1,22 @@
-<template>
-  <router-view />
-</template>
+<script setup>
+import { ref, onMounted } from 'vue'
+import { supabase } from './utils/supabaseClient'
 
-<script>
-import { defineComponent } from 'vue'
+const countries = ref([])
 
-export default defineComponent({
-  name: 'App'
+async function getCountries() {
+  const { data } = await supabase.from('countries').select()
+  countries.value = data
+}
+
+onMounted(() => {
+  getCountries()
 })
 </script>
+
+<template>
+  <ul>
+    <li v-for="country in countries" :key="country.id">{{ country.name }}</li>
+  </ul>
+  <router-view />
+</template>

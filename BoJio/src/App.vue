@@ -11,7 +11,6 @@ async function getCountries() {
 
 onMounted(() => {
   getCountries();
-  console.log(process.env.FOO);
 })
 </script>
 

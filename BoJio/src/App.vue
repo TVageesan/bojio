@@ -10,7 +10,8 @@ async function getCountries() {
 }
 
 onMounted(() => {
-  getCountries()
+  getCountries();
+  console.log(process.env.FOO);
 })
 </script>
 

@@ -4,7 +4,6 @@ import 'vue-cal/dist/vuecal.css'
 import { ref } from 'vue'
 
 const events = ref([]);
-console.log('process',process.env.FOO);
 </script>
 
 

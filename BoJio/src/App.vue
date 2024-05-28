@@ -1,22 +1,49 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { supabase } from './utils/supabaseClient'
+import { ref, onMounted, computed, inject } from "vue";
+import { supabase } from "./utils/supabaseClient";
+import LoginScreen from "./components/LoginScreen.vue";
 
-const countries = ref([])
+const session = ref(null);
+const showDialog = computed(() => session.value == null);
 
-async function getCountries() {
-  const { data } = await supabase.from('countries').select()
-  countries.value = data
-}
+const handleLogin = async (email, password) => {
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) throw error;
+};
+
+const handleSignUp = async (email, password) => {
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+  if (error) throw error;
+};
+
+const onSignIn = (email, password, signIn) => {
+  const handler = signIn ? handleLogin : handleSignUp;
+  handler(email, password);
+};
+
+inject("session", session);
 
 onMounted(() => {
-  getCountries();
-})
+  supabase.auth.getSession().then(({ data }) => {
+    session.value = data.session;
+  });
+
+  supabase.auth.onAuthStateChange((_, _session) => {
+    session.value = _session;
+  });
+});
 </script>
 
 <template>
-  <ul>
-    <li v-for="country in countries" :key="country.id">{{ country.name }}</li>
-  </ul>
+  {{ console.log("session", session) }}
+  <q-dialog v-model="showDialog">
+    <LoginScreen @login="onSignIn" />
+  </q-dialog>
   <router-view />
 </template>

@@ -40,55 +40,31 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
+
+const drawer = ref(false);
 
 const menuList = [
   {
     icon: "inbox",
-    label: "Inbox",
+    label: "Calendar",
     separator: false,
   },
   {
     icon: "send",
-    label: "Outbox",
+    label: "Groups",
     separator: false,
   },
   {
     icon: "delete",
-    label: "Trash",
-    separator: false,
-  },
-  {
-    icon: "error",
-    label: "Spam",
-    separator: false,
-  },
-  {
-    icon: "settings",
-    label: "Settings",
+    label: "Browse",
     separator: false,
   },
   {
     icon: "feedback",
-    label: "Send Feedback",
-    separator: false,
-  },
-  {
-    icon: "help",
-    iconColor: "primary",
-    label: "Help",
+    label: "Events",
     separator: false,
   },
 ];
-
-export default {
-  setup() {
-    const drawer = ref(false);
-    return {
-      drawer,
-      menuList,
-    };
-  },
-};
 </script>

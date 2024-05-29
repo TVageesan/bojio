@@ -1,3 +1,4 @@
+<!--
 <script setup>
 import { ref } from "vue";
 const email = ref("");
@@ -75,3 +76,4 @@ const sendDetails = () => {
     </q-card-section>
   </q-card>
 </template>
+-->

@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
+        <q-btn flat @mouseenter="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title>
           Your Schedule
         </q-toolbar-title>

@@ -47,22 +47,22 @@ const drawer = ref(false);
 
 const menuList = [
   {
-    icon: "inbox",
+    icon: "calendar_today",
     label: "Calendar",
     separator: false,
   },
   {
-    icon: "send",
+    icon: "groups",
     label: "Groups",
     separator: false,
   },
   {
-    icon: "delete",
+    icon: "search",
     label: "Browse",
     separator: false,
   },
   {
-    icon: "feedback",
+    icon: "event",
     label: "Events",
     separator: false,
   },

@@ -19,6 +19,11 @@
     >
       <q-scroll-area class="fit">
         <q-list>
+
+          <q-item header class = "text-h5 custom-header">
+            <b>BoJio</b>
+          </q-item>
+
           <template v-for="(menuItem, index) in menuList" :key="index">
             <q-item clickable :active="menuItem.label === 'Outbox'" v-ripple>
               <q-item-section avatar>
@@ -68,3 +73,9 @@ const menuList = [
   },
 ];
 </script>
+
+<style>
+.custom-header{
+  color:black;
+}
+</style>

@@ -4,6 +4,8 @@ import { supabase } from "./utils/supabaseClient";
 import LoginScreen from "./components/LoginScreen.vue";
 
 const session = ref(null);
+inject("session", session);
+
 const showDialog = computed(() => session.value == null);
 
 const handleLogin = async (email, password) => {
@@ -26,8 +28,6 @@ const onSignIn = (email, password, signIn) => {
   const handler = signIn ? handleLogin : handleSignUp;
   handler(email, password);
 };
-
-inject("session", session);
 
 onMounted(() => {
   supabase.auth.getSession().then(({ data }) => {

@@ -17,7 +17,7 @@ const vPassword = (password, signIn) => {
 };
 const sendDetails = () => {
   if (vEmail(email.value) && vPassword(password.value, signIn.value)) {
-    emit("login", email, password, signIn);
+    emit("login", email.value, password.value, signIn.value);
   } else {
     console.log("insufficient details");
   }

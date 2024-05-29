@@ -41,9 +41,14 @@ onMounted(() => {
 </script>
 
 <template>
-  {{ console.log("session", session) }}
   <q-dialog v-model="showDialog">
     <LoginScreen @login="onSignIn" />
   </q-dialog>
   <router-view />
 </template>
+
+<style>
+.q-dialog__backdrop {
+  backdrop-filter: blur(7px);
+}
+</style>

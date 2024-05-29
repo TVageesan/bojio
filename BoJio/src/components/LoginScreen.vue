@@ -3,6 +3,25 @@ import { ref } from "vue";
 const email = ref("");
 const password = ref("");
 const signIn = ref(true);
+const emit = defineEmits("login");
+//TODO: login/signup validation
+const vEmail = (email) => true; //validate email
+const vPassword = (password, signIn) => {
+  if (signIn) {
+    //validate password exists
+    return true;
+  } else {
+    //validate password strength: minimum 6 chars, etc.
+    return true;
+  }
+};
+const sendDetails = () => {
+  if (vEmail(email.value) && vPassword(password.value, signIn.value)) {
+    emit("login", email, password, signIn);
+  } else {
+    console.log("insufficient details");
+  }
+};
 </script>
 
 <template>
@@ -28,6 +47,7 @@ const signIn = ref(true);
         v-model="password"
         type="password"
         label="Password"
+        @keydown.enter.prevent="sendDetails"
       ></q-input>
     </q-card-section>
     <q-card-section>
@@ -39,7 +59,7 @@ const signIn = ref(true);
         :label="signIn ? 'Sign in' : 'Sign up'"
         no-caps
         class="full-width"
-        @click="$emit('login', email, password, signIn)"
+        @click="sendDetails"
       ></q-btn>
     </q-card-section>
     <q-card-section class="text-center q-pt-none">

@@ -7,13 +7,13 @@ location int8
 start
 end
 **/
-export const getEvents = (session) => {
-  return supabase.from("events").select();
-};
+import { supabase } from "./utils/supabaseClient";
+
+const getUser = (session) => session.value.user.id;
+
+export const getEvents = (session) => supabase.from("events").select().eq("user_id", getUser(session));
 
 export const postEvents = (session, events) => {
-  return supabase.from("events").insert({
-    user_id: session.user.id,
-    ...events,
-  });
+  console.log('events',events)
+  //return supabase.from("events").upsert();
 };

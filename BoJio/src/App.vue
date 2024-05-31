@@ -1,10 +1,10 @@
 <script setup>
-import { ref, onMounted, computed, inject } from "vue";
+import { ref, onMounted, computed, provide } from "vue";
 import { supabase } from "./utils/supabaseClient";
 import LoginScreen from "./components/LoginScreen.vue";
 
 const session = ref(null);
-inject("session", session);
+provide("session", session);
 
 const showDialog = computed(() => session.value == null);
 
@@ -36,6 +36,7 @@ onMounted(() => {
 
   supabase.auth.onAuthStateChange((_, _session) => {
     session.value = _session;
+    console.log("session.value", session.value);
   });
 });
 </script>

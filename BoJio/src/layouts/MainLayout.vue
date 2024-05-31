@@ -5,6 +5,7 @@
     style="height: 800px" 
     class="shadow-2 rounded-borders" 
   > 
+  <!-- Page header -->
     <q-header elevated :class="$q.dark.isActive ? 'bg-secondary' : 'bg-black'"> 
       <q-toolbar> 
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" /> 
@@ -13,7 +14,8 @@
         > 
       </q-toolbar> 
     </q-header> 
- 
+
+    <!-- Sidebar -->
     <q-drawer 
       v-model="drawer" 
       show-if-above 
@@ -35,9 +37,10 @@
               <q-item-section> 
                 {{ menuItem.label }} 
               </q-item-section> 
+
+              <!-- Tooltips -->
               <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
-                <strong>Tooltip</strong> on <em>left</em>
-                (<q-icon name="keyboard_arrow_left"/>)
+                <span class="tooltip-content"><strong>{{ tooltipText(menuItem) }}</strong></span>
               </q-tooltip>
             </q-item> 
             <q-separator :key="'sep' + index" v-if="menuItem.separator" /> 
@@ -58,6 +61,7 @@ import { ref } from "vue";
 const drawer = ref(false); 
 const miniState = ref(true); 
  
+// List items
 const menuList = [ 
   { 
     icon: "calendar_today", 
@@ -78,6 +82,25 @@ const menuList = [
     icon: "event", 
     label: "Events", 
     separator: false, 
-  }, 
+  },
 ]; 
+
+// Tooltip assignment
+const tooltipText = (menuItem) => {
+  if (menuItem.label === 'Calendar') {
+    return 'View your personal calendar';
+  } else if (menuItem.label === 'Groups') {
+    return 'View your friend groups';
+  } else if (menuItem.label === 'Browse') {
+    return 'Search for activities';
+  } else {
+    return `Explore events near you`;
+  }
+};
 </script> 
+
+<style scoped>
+.tooltip-content {
+  white-space: nowrap;
+}
+</style>

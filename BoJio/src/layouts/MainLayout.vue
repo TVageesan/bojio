@@ -1,56 +1,44 @@
 <template>
-  <q-layout
-    view="hHh Lpr lFf"
-    container
-    style="height: 800px"
-    class="shadow-2 rounded-borders"
-  >
-  <!-- Page header -->
-    <q-header elevated :class="$q.dark.isActive ? 'bg-secondary' : 'bg-black'">
-      <q-toolbar>
-        <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
-        <q-toolbar-title
-          ><q-icon name="mood" class="q-mr-sm" />Bojio</q-toolbar-title
-        >
-      </q-toolbar>
-    </q-header>
-
-    <!-- Sidebar -->
+  {{console.log('select',select)}}
+  <q-layout view="lHh lpR lFf">
     <q-drawer
       v-model="drawer"
       show-if-above
       :mini="miniState"
       @mouseover="miniState = false"
       @mouseout="miniState = true"
-      :width="200"
-      :breakpoint="500"
       bordered
+      :width="220"
+      :breakpoint="500"
       :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
     >
       <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
-        <q-list padding>
-          <template v-for="(menuItem, index) in menuList" :key="index">
-            <q-item clickable :active="menuItem.label === ''" v-ripple>
-              <q-item-section avatar>
-                <q-icon :name="menuItem.icon" />
-              </q-item-section>
-              <q-item-section>
-                {{ menuItem.label }}
-              </q-item-section>
-
-              <!-- Tooltips -->
-              <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
-                <span class="tooltip-content"><strong>{{ tooltipText(menuItem) }}</strong></span>
-              </q-tooltip>
-            </q-item>
-            <q-separator :key="'sep' + index" v-if="menuItem.separator" />
-          </template>
+        <q-list padding seperator>
+          <q-item v-if="miniState">
+            <q-item-section avatar>
+              <q-icon name="mood" />
+            </q-item-section>
+          </q-item>
+          <q-item header class = "text-h5 text-black" v-else>
+            <b>BoJio</b>
+          </q-item>
+          <q-item :class="{ selected : select == index }" v-for="(menuItem, index) in menuList" :key="index" @click="select = index" clickable v-ripple>
+            <q-item-section avatar>
+              <q-icon :name="menuItem.icon" />
+            </q-item-section>
+            <q-item-section>
+              {{ menuItem.label }}
+            </q-item-section>
+            <q-tooltip anchor="center left" self="center right" style="white-space: nowrap">
+              {{ menuItem.tooltip }}
+            </q-tooltip>
+          </q-item>
         </q-list>
       </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view @drawer="drawer = !drawer" />
     </q-page-container>
   </q-layout>
 </template>
@@ -60,47 +48,36 @@ import { ref } from "vue";
 
 const drawer = ref(false);
 const miniState = ref(true);
+const select = ref(null);
 
 // List items
 const menuList = [
   {
     icon: "calendar_today",
     label: "Calendar",
-    separator: false,
+    tooltip: "View your personal calendar"
   },
   {
     icon: "groups",
     label: "Groups",
-    separator: false,
+    tooltip: "View your friend groups"
   },
   {
     icon: "search",
     label: "Browse",
-    separator: false,
+    tooltip: "Search for activities"
   },
   {
     icon: "event",
     label: "Events",
-    separator: false,
+    tooltip: "Explore events near you"
   },
 ];
-
-// Tooltip assignment
-const tooltipText = (menuItem) => {
-  if (menuItem.label === 'Calendar') {
-    return 'View your personal calendar';
-  } else if (menuItem.label === 'Groups') {
-    return 'View your friend groups';
-  } else if (menuItem.label === 'Browse') {
-    return 'Search for activities';
-  } else {
-    return `Explore events near you`;
-  }
-};
 </script>
+<style>
+.selected{
+  background-color: black;
+  color:white;
 
-<style scoped>
-.tooltip-content {
-  white-space: nowrap;
 }
 </style>

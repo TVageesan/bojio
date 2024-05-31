@@ -2,13 +2,27 @@
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import { ref } from "vue";
+import { useQuasar } from 'quasar'
 
 const events = ref([]);
+const dialogModel = ref(false);
+const $q = useQuasar()
 
 const newEvent = () => {
-  //TODO add logic
-  console.log("button clicked!");
-};
+  $q.dialog({
+    title: 'New Event',
+    message: 'Event Name',
+    newEvent: {
+      model: '',
+      isValid: val => val.length > 2, 
+      type: 'text'
+    },
+    cancel: true,
+    persistent: true
+  }).onOk(data => {
+    // need to do some console log stuff
+  })
+}
 </script>
 
 <template>
@@ -19,7 +33,7 @@ const newEvent = () => {
       <q-btn round color="black" icon="add" @click="newEvent" label="" />
     </div>
 
-    {{ console.log(events) }}
+    <!-- Calendar -->
     <vue-cal
       :selected-date="new Date()"
       :time-from="6 * 60"

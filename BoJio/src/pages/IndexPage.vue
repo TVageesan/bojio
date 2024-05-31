@@ -31,10 +31,11 @@ const calendarApp = createCalendar({
   ]
 })
 
-const handleCreate = (event) => { //to add event to schedule,
+const handleCreate = (event) => { //to add event to schedule, just call this function with ur evt object
   events.add(event)
 }
 
+//NOTE: I wrote below how I would've written this dialog, just to show the easier way
 import { useQuasar } from 'quasar'
 const dialogModel = ref(false);
 const $q = useQuasar()
@@ -55,9 +56,48 @@ const newEvent = () => {
   })
 }
 
+//How I would've written this^:
+//I think this way gives you more fine-tune of the dialog styling + way less mafan to write imo lol
+const openDialog = ref(false); // set to true to trigger dialog open
+const exampleInput = ref(''); // keep track of your input fields with refs
+//with more refs for each input you want track...
+
+const handleSubmit = () => {
+  let newEvt = {
+    title: exampleInput.value, // extract the info you need from your refs
+    //start: startTime.value, etc...
+  }
+  handleCreate(newEvt) // then send the created event to my calendar
+}
+//Also see below in template for rest of the dialog code
 </script>
 
 <template>
+  <!-- How I would've written it pt.2 -->
+  <q-dialog v-model="openDialog">
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">New Event</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        Event Name
+      </q-card-section>
+
+      <q-input label="example input" v-model="exampleInput"></q-input>
+
+      <q-card-actions align="right">
+        <q-btn flat label="Submit" color = "primary" @click="handleSubmit"/>
+        <q-btn flat label="Close" color="text-red" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  <div class="q-pa-md q-gutter-sm">
+    <q-btn round color="black" icon="add" @click="openDialog = true" label="" />
+  </div>
+  <!-- How I would've written it ^-->
+
+  <!---Add Button-->
   <div class="q-pa-md q-gutter-sm">
     <q-btn round color="black" icon="add" @click="newEvent" label="" />
   </div>

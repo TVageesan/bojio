@@ -35,6 +35,10 @@
               <q-item-section> 
                 {{ menuItem.label }} 
               </q-item-section> 
+              <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
+                <strong>Tooltip</strong> on <em>left</em>
+                (<q-icon name="keyboard_arrow_left"/>)
+              </q-tooltip>
             </q-item> 
             <q-separator :key="'sep' + index" v-if="menuItem.separator" /> 
           </template> 

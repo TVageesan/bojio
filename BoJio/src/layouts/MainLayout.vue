@@ -1,14 +1,5 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
-        <q-toolbar-title>
-          Your Schedule
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-header>
-
     <q-drawer
       v-model="drawer"
       show-if-above

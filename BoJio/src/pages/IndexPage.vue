@@ -98,10 +98,6 @@ const handleSubmit = () => {
   </div>
   <!-- How I would've written it ^-->
 
-  <!---Add Button-->
-  <div class="q-pa-md q-gutter-sm">
-    <q-btn round color="black" icon="add" @click="newEvent" label="" />
-  </div>
   <div>
     <ScheduleXCalendar :calendar-app="calendarApp" />
   </div>

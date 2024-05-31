@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@schedule-x/calendar": "^1.42.3",
-    "@schedule-x/theme-default": "^1.42.3"
-  }
-}

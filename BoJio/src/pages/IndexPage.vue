@@ -37,25 +37,6 @@ const handleCreate = (event) => { //to add event to schedule, just call this fun
 }
 
 //NOTE: I wrote below how I would've written this dialog, just to show the easier way
-import { useQuasar } from 'quasar'
-const dialogModel = ref(false);
-const $q = useQuasar()
-
-const newEvent = () => {
-  $q.dialog({
-    title: 'New Event',
-    message: 'Event Name',
-    newEvent: {
-      model: '',
-      isValid: val => val.length > 2,
-      type: 'text'
-    },
-    cancel: true,
-    persistent: true
-  }).onOk(data => {
-    // need to do some console log stuff
-  })
-}
 
 //How I would've written this^:
 //I think this way gives you more fine-tune of the dialog styling + way less mafan to write imo lol
@@ -88,8 +69,8 @@ const handleSubmit = () => {
       <q-input label="example input" v-model="exampleInput"></q-input>
 
       <q-card-actions align="right">
-        <q-btn flat label="Submit" color = "primary" @click="handleSubmit"/>
-        <q-btn flat label="Close" color="text-red" v-close-popup />
+        <q-btn color="primary" label="Add" @click="addEvent" />
+          <q-btn color="negative" label="Cancel" @click="openDialog = false" />
       </q-card-actions>
     </q-card>
   </q-dialog>

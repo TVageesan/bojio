@@ -113,7 +113,24 @@ const save = () => {
   <HeaderComponent @drawer="$emit('drawer')" @save="save" title="Your Schedule" />
 
   <q-page>
-    <q-btn @click="addDialog = true">Add Event</q-btn>
+    <q-btn
+        class="float"
+        icon="add"
+        @click="addDialog = true"
+        size="lg"
+      >
+      Add Event
+      </q-btn>
     <CalendarView :edit="true" ref="cal" @evt-click="editEvent" />
   </q-page>
 </template>
+<style>
+.float {
+  position: fixed;
+  background-color: white;
+  color: black;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+</style>

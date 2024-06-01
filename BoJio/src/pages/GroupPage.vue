@@ -14,6 +14,7 @@ const groups = [
   {
     name: 'We go Jim',
     owner: '27082bdb-4e07-4cac-b498-5b35f1ea9f43',
+    icon: 'fitness_center',
     users:[
       '129cb36b-d07c-464d-9aac-6a16bdc30211',
       '27082bdb-4e07-4cac-b498-5b35f1ea9f43'
@@ -22,6 +23,7 @@ const groups = [
   {
     name: 'PF Class',
     owner:'129cb36b-d07c-464d-9aac-6a16bdc30211',
+    icon: 'menu_book',
     users:[
       '129cb36b-d07c-464d-9aac-6a16bdc30211',
       '27082bdb-4e07-4cac-b498-5b35f1ea9f43',
@@ -50,7 +52,7 @@ const loadEvents = (index) => {
 </script>
 
 <template>
-  <HeaderComponent @drawer="$emit('drawer')" title="Group's Shared Schedule" />
+  <HeaderComponent @drawer="$emit('drawer')" title="Group Schedule" />
   <q-page class="row no-wrap">
     <div class="col-auto q-pa-md">
         <GroupList :groups="groups" @group-selected="loadEvents"/>

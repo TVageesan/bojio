@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 const drawer = ref(false);
 const miniState = ref(true);
-const select = ref(-1);
+const select = ref(0);
 const menuList = [
   {
     icon: "calendar_today",
@@ -73,7 +73,7 @@ const menuList = [
             </q-item>
           </q-list>
         </q-scroll-area>
-      
+      </q-drawer>
 
       <q-page-container>
         <router-view @drawer="drawer = !drawer"></router-view>

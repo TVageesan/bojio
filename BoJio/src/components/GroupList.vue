@@ -1,16 +1,25 @@
 <script setup>
 import { ref } from 'vue';
-const isCollapsed = ref(true);
+const select = ref(-1);
+const isCollapsed = ref(false);
 const props = defineProps(['groups']);
-
 </script>
 
 <template>
-    <!-- Sidebar -->
     <div :class="['sidebar', { 'collapsed': isCollapsed }]">
       <q-list v-if="!isCollapsed" dense>
-        <q-item v-for="(item,index) in groups" :key="index" clickable>
-          <q-item-section>{{ item.name }}</q-item-section>
+        <q-item
+          v-for="(item,index) in groups"
+          :key="index"
+          clickable
+          :class="{selected:select == index}"
+          @click ="select=index;$emit('group-selected',index)">
+          <q-item-section class="text-h6">
+            {{ item.name }}
+          </q-item-section>
+          <q-item-section avatar>
+            <q-icon :name="item.icon" />
+          </q-item-section>
         </q-item>
       </q-list>
       <q-btn
@@ -24,6 +33,10 @@ const props = defineProps(['groups']);
 </template>
 
 <style scoped>
+.selected{
+  background-color: black;
+  color: white;
+}
 .sidebar {
   width: 300px;
   background-color: #f5f5f5;

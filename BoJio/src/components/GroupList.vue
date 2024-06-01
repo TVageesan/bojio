@@ -1,54 +1,49 @@
+<script setup>
+import { ref } from 'vue';
+const isCollapsed = ref(true);
+const props = defineProps(['groups']);
+
+</script>
+
 <template>
-    <q-list>
-        <q-item v-for="(item, index) in Groups" 
-        :key="item.id"
-        :class="{ selected: select === index }" 
-        @click="select.value = index; emit('groupIDSelected')"  
-        clickable v-ripple>
-        <q-item-section avatar>
-        <q-icon :name="item.icon" />
-      </q-item-section>
-        <q-item-section>{{ item.name }}</q-item-section>
-      </q-item>
-    </q-list>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  const emit = defineEmits("groupID Selected");
+    <!-- Sidebar -->
+    <div :class="['sidebar', { 'collapsed': isCollapsed }]">
+      <q-list v-if="!isCollapsed" dense>
+        <q-item v-for="(item,index) in groups" :key="index" clickable>
+          <q-item-section>{{ item.name }}</q-item-section>
+        </q-item>
+      </q-list>
+      <q-btn
+        @click="isCollapsed = !isCollapsed"
+        class="toggle-btn"
+        icon="keyboard_arrow_right"
+        round
+        dense
+      />
+    </div>
+</template>
 
-  const Groups = [
-  {
-    icon: "calendar_today",
-    name: "Group 1",
-    groupID: "A"
-  },
-  {
-    icon: "calendar_today",
-    name: "Group 2",
-    groupID: "B"
-  },
-  {
-    icon: "calendar_today",
-    name: "Group 3",
-    groupID: "C"
-  },
-  {
-    icon: "calendar_today",
-    name: "Group 4",
-    groupID: "D"
-  },
-  {
-    icon: "calendar_today",
-    name: "Group 5",
-    groupID: "E"
-  },
-];
-  </script>
+<style scoped>
+.sidebar {
+  width: 300px;
+  background-color: #f5f5f5;
+  transition: width 0.3s;
+  position: relative;
+}
 
-<style>
-.selected{
-  background-color: black;
-  color:white;
+.sidebar.collapsed {
+  width: 20px;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  transform: translateY(-50%);
+}
+
+.sidebar.collapsed .toggle-btn {
+  right: -10px;
+  transform: rotate(180deg) translateY(-50%);
 }
 </style>

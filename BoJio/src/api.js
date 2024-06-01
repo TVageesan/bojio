@@ -4,9 +4,11 @@ import { supabase } from "./utils/supabaseClient";
 
 const getUser = (session) => session.value.user.id;
 
-export const getEvents = () => supabase.from("events").select()
+export const getEvents = (session) => supabase.from("events").select().eq('user_id',getUser(session));
 
-export const deleteEvents = (ids) => supabase.from("events").delete().in('evt_id',ids)
+export const getGroupEvents = (user_ids) => supabase.from("events").select().in('user_id',user_ids);
+
+export const deleteEvents = (session,ids) => supabase.from("events").delete().eq('user_id',getUser(session)).in('evt_id',ids)
 
 export const postEvents = (session, events) => {
   const output = events.map(evt =>

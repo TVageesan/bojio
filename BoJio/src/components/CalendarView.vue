@@ -10,6 +10,10 @@ import { getCurrentDate } from 'src/utils/getDate'
 
 const events = createEventsServicePlugin();
 const emit = defineEmits(['evt-click'])
+const { edit } = defineProps(['edit']);
+let plugins = [events, createCurrentTimePlugin({ fullWeekWidth: true })]
+if (edit) plugins = plugins.concat([createDragAndDropPlugin(15),createResizePlugin(15)])
+
 
 const calendarApp = createCalendar({
   selectedDate: getCurrentDate(),
@@ -21,12 +25,7 @@ const calendarApp = createCalendar({
   views: [viewDay, viewWeek, viewMonthGrid, viewMonthAgenda],
   defaultView: viewWeek.name,
   events: [],
-  plugins:[
-    events,
-    createDragAndDropPlugin(15),
-    createResizePlugin(15),
-    createCurrentTimePlugin({ fullWeekWidth: true })
-  ]
+  plugins
 })
 
 defineExpose({ events })

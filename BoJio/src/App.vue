@@ -42,7 +42,7 @@ onMounted(() => {
 
 <template>
   <q-dialog v-model="showDialog">
-    <LoginScreen @login="onSignIn" />
+    <LoginScreen @login="onSignIn"/>
   </q-dialog>
   <router-view/>
 </template>

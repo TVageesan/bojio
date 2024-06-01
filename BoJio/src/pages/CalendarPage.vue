@@ -3,18 +3,18 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 import CalendarView from 'src/components/CalendarView.vue'
 import TimeInput from 'src/components/TimeInput.vue';
 import { getEvents, postEvents, deleteEvents } from 'src/api';
-import { onMounted, watch, ref, computed, inject } from 'vue'
+import { watch, ref, computed, inject } from 'vue'
 import { getCurrentDate } from 'src/utils/getDate'
 
 const emit = defineEmits(['drawer']);
 const session = inject('session');
 const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
-let count = 0;
+let new_index = 0;
 
 const loadEvents = () => {
   if (events.value && session.value) {
-    getEvents().then(resp => {
+    getEvents(session).then(resp => {
       const stored_events = resp.data.map(evt => ({
         id: evt.evt_id,
         start: evt.start_time,
@@ -22,7 +22,7 @@ const loadEvents = () => {
         title: evt.title,
       }));
       events.value.set(stored_events);
-      count = stored_events.length;
+      new_index = Math.max.apply(0,stored_events.map((evt)=>evt.id)) + 1;
     });
   }
 };
@@ -62,18 +62,15 @@ const editEventDelete = () => {
 }
 
 const addEvent = () => {
-  events.value.add({...newEvent.value,id:count++})
+  events.value.add({...newEvent.value,id:new_index++})
+  console.log('getall',events.value.getAll());
 }
 
 const save = () => {
   postEvents(session, events.value.getAll()).then(resp => console.log('post resp', resp));
   console.log('deleted',deletedEvents);
-  if (deletedEvents.length > 0) deleteEvents(deletedEvents).then(resp => console.log('delete resp',resp));
+  if (deletedEvents.length > 0) deleteEvents(session,deletedEvents).then(resp => console.log('delete resp',resp));
 }
-
-onMounted(() => {
-  console.log('curr count',count);
-})
 
 </script>
 
@@ -113,9 +110,10 @@ onMounted(() => {
     </q-card>
   </q-dialog>
 
-  <q-btn @click="addDialog = true">Add Event</q-btn>
   <HeaderComponent @drawer="$emit('drawer')" @save="save" title="Your Schedule" />
+
   <q-page>
-    <CalendarView ref="cal" @evt-click="editEvent" />
+    <q-btn @click="addDialog = true">Add Event</q-btn>
+    <CalendarView :edit="true" ref="cal" @evt-click="editEvent" />
   </q-page>
 </template>

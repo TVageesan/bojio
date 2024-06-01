@@ -1,5 +1,4 @@
 <script setup>
-import { route } from 'quasar/wrappers';
 import { ref } from 'vue';
 const drawer = ref(false);
 const miniState = ref(true);
@@ -87,5 +86,15 @@ const menuList = [
 .selected{
   background-color: black;
   color:white;
+}
+
+.example::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.example {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 </style>

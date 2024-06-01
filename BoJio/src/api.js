@@ -1,19 +1,23 @@
 // functions to get data from supabase
-/**EVENTS:
-id int8
-user_id uuid
-title varchar
-location int8
-start
-end
-**/
 import { supabase } from "./utils/supabaseClient";
 
 const getUser = (session) => session.value.user.id;
 
-export const getEvents = (session) => supabase.from("events").select().eq("user_id", getUser(session));
+export const getEvents = () => supabase.from("events").select()
+
+export const deleteEvents = (ids) => supabase.from("events").delete().in('event_id',ids)
 
 export const postEvents = (session, events) => {
-  console.log('events',events)
-  //return supabase.from("events").upsert();
+  const output = events.map(evt =>
+    ({
+      evt_id: evt.id,
+      user_id: getUser(session),
+      start_time: evt.start,
+      end_time: evt.end,
+      title: evt.title,
+      description: 'test',
+      location: 'test'
+    })
+  )
+  return supabase.from("events").upsert(output);
 };

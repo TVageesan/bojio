@@ -1,28 +1,33 @@
 <script setup>
+import { route } from 'quasar/wrappers';
 import { ref } from 'vue';
 const drawer = ref(false);
-const miniState = ref(false);
+const miniState = ref(true);
 const select = ref(-1);
 const menuList = [
   {
     icon: "calendar_today",
     label: "Calendar",
-    tooltip: "View your personal calendar"
+    tooltip: "View your personal calendar",
+    route: '/',
   },
   {
     icon: "groups",
     label: "Groups",
-    tooltip: "View your friend groups"
+    tooltip: "View your friend groups",
+    route: '/group',
   },
   {
     icon: "search",
     label: "Browse",
-    tooltip: "Search for activities"
+    tooltip: "Search for activities",
+    route: '/',
   },
   {
     icon: "event",
     label: "Events",
-    tooltip: "Explore events near you"
+    tooltip: "Explore events near you",
+    route: '/',
   },
 ];
 
@@ -50,10 +55,14 @@ const menuList = [
             <q-item class = "text-h5 text-black text-bold" v-else>
               BoJio
             </q-item>
-            <q-item :class="{ selected: select == index }" v-for="(menuItem, index) in menuList" :key="index"
-              @click="select = index" clickable v-ripple>
+            <q-item
+              v-for="(menuItem, index) in menuList"
+              :key="index"
+              :class="{ selected: select == index }"
+              @click="select = index;$router.push(menuItem.route)" clickable v-ripple
+            >
               <q-item-section avatar>
-                <q-icon :name="menuItem.  icon" />
+                <q-icon :name="menuItem.icon" />
               </q-item-section>
               <q-item-section>
                 {{ menuItem.label }}

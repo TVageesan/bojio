@@ -6,6 +6,7 @@ const props = defineProps(['title'])
     <q-toolbar>
       <q-btn flat @click="$emit('drawer')" round dense icon="menu" />
       <q-toolbar-title> {{ title }} </q-toolbar-title>
+      <q-btn flat @click="$emit('save')">Save</q-btn>
     </q-toolbar>
   </q-header>
 </template>

@@ -1,33 +1,32 @@
 <template>
-    <div>
-      <q-list>
-        <q-item v-for="group in groups" :key="group.id" clickable @click="selectGroup(group)">
-          <q-item-section>
-            {{ group.name }}
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </div>
+    <q-list>
+      <q-item v-for="item in items" :key="item.id" @click="select = index /*some routing needed*/ " clickable v-ripple>
+        <q-item-section avatar>
+        <q-icon :name="item.icon" />
+      </q-item-section>
+        <q-item-section>{{ item.name }}</q-item-section>
+      </q-item>
+    </q-list>
   </template>
   
   <script setup>
-  import { ref, defineProps, defineEmit } from 'vue';
-  
-  const props = defineProps({
-    groups: {
-      type: Array,
-      required: true
-    }
-  });
-  
-  const emit = defineEmit(['group-selected']);
-  
-  const selectGroup = (group) => {
-    emit('group-selected', group);
-  };
+  import { ref } from 'vue';
+
+  const items = [
+  {
+    icon: "calendar_today",
+    name: "Group 1",
+    route: '/',
+  },
+  {
+    icon: "calendar_today",
+    name: "Group 2",
+    route: '/',
+  },
+  {
+    icon: "calendar_today",
+    name: "Group 3",
+    route: '/',
+  },
+];
   </script>
-  
-  <style scoped>
-  /* Add any specific styles for your component here */
-  </style>
-  

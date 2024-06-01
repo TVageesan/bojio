@@ -121,7 +121,7 @@ const save = () => {
       >
       Add Event
       </q-btn>
-    <CalendarView :edit="true" ref="cal" @evt-click="editEvent" />
+    <CalendarView :users="[]" :edit="true" ref="cal" @evt-click="editEvent" />
   </q-page>
 </template>
 <style>

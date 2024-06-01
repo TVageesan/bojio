@@ -32,6 +32,12 @@ const groups = [
   }
 ]
 
+const users = [
+  '129cb36b-d07c-464d-9aac-6a16bdc30211',
+  '27082bdb-4e07-4cac-b498-5b35f1ea9f43',
+  'c603c299-9803-4cbc-bdd8-be90fc771df6'
+]
+
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
 
 const loadEvents = (index) => {
@@ -58,7 +64,7 @@ const loadEvents = (index) => {
         <GroupList :groups="groups" @group-selected="loadEvents"/>
     </div>
     <div class="col" style="overflow-y: auto; height: 100vh;">
-      <CalendarView :edit="false" ref="cal"/>
+      <CalendarView :users ="users" :edit="false" ref="cal"/>
     </div>
   </q-page>
 

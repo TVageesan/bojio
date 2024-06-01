@@ -1,6 +1,10 @@
 <template>
     <q-list>
-      <q-item v-for="item in items" :key="item.id" @click="select = index /*some routing needed*/ " clickable v-ripple>
+        <q-item v-for="(item, index) in Groups" 
+        :key="item.id"
+        :class="{ selected: select === index }" 
+        @click="select.value = index; emit('groupIDSelected')"  
+        clickable v-ripple>
         <q-item-section avatar>
         <q-icon :name="item.icon" />
       </q-item-section>
@@ -11,22 +15,40 @@
   
   <script setup>
   import { ref } from 'vue';
+  const emit = defineEmits("groupID Selected");
 
-  const items = [
+  const Groups = [
   {
     icon: "calendar_today",
     name: "Group 1",
-    route: '/',
+    groupID: "A"
   },
   {
     icon: "calendar_today",
     name: "Group 2",
-    route: '/',
+    groupID: "B"
   },
   {
     icon: "calendar_today",
     name: "Group 3",
-    route: '/',
+    groupID: "C"
+  },
+  {
+    icon: "calendar_today",
+    name: "Group 4",
+    groupID: "D"
+  },
+  {
+    icon: "calendar_today",
+    name: "Group 5",
+    groupID: "E"
   },
 ];
   </script>
+
+<style>
+.selected{
+  background-color: black;
+  color:white;
+}
+</style>

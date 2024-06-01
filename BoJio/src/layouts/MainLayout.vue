@@ -32,6 +32,7 @@ const menuList = [
 ];
 
 </script>
+
 <template>
   <div class="q-pa-md">
     <q-layout view="lHh Lpr lff">
@@ -73,7 +74,7 @@ const menuList = [
             </q-item>
           </q-list>
         </q-scroll-area>
-      </q-drawer>
+      
 
       <q-page-container>
         <router-view @drawer="drawer = !drawer"></router-view>
@@ -81,6 +82,7 @@ const menuList = [
     </q-layout>
   </div>
 </template>
+
 <style>
 .selected{
   background-color: black;

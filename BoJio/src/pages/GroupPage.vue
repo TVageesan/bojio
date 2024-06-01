@@ -29,13 +29,13 @@ onMounted(() => {})
   <HeaderComponent @drawer="$emit('drawer')" @save="save" title="Group's Shared Schedule" />
   <q-page>
     <div class="row">
-      <div class="col-auto">
+      <div class="col-2">
         <GroupList/>
       </div>
-      
       <div class="col">
         <CalendarView ref="cal"/>
       </div>
     </div>
   </q-page>
+
 </template>

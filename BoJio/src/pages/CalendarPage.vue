@@ -6,33 +6,40 @@ import { getEvents, postEvents, deleteEvents } from 'src/api';
 import { onMounted, watch, ref, computed, inject } from 'vue'
 import { getCurrentDate } from 'src/utils/getDate'
 
-const emit = defineEmits(['drawer'])
+const emit = defineEmits(['drawer']);
 const session = inject('session');
 const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
 let count = -1;
 
-watch(events, (eventPlugin, _) => {
-  getEvents().then(resp => {
-    const stored_events = resp.data.map(
-      evt => ({
+const loadEvents = () => {
+  if (events.value && session.value) {
+    getEvents().then(resp => {
+      const stored_events = resp.data.map(evt => ({
         id: evt.evt_id,
         start: evt.start_time,
         end: evt.end_time,
         title: evt.title,
-      })
-    )
-    eventPlugin.set(stored_events);
-    count = stored_events.length;
-  });
-})
+      }));
+      events.value.set(stored_events);
+      count = stored_events.length;
+    });
+  }
+};
+
+watch(cal, (eventPlugin) => {
+  loadEvents();
+});
+
+watch(session, (eventPlugin) => {
+  loadEvents();
+});
 
 const addDialog = ref(false);
 const editDialog = ref(false);
 
-const currEvent = ref(null)
+const currEvent = ref(null);
 let deletedEvents = [];
-
 
 const newEvent = ref({
   title: 'New Event',

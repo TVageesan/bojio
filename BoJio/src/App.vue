@@ -36,7 +36,6 @@ onMounted(() => {
 
   supabase.auth.onAuthStateChange((_, _session) => {
     session.value = _session;
-    console.log("session.value", session.value);
   });
 });
 </script>
@@ -45,7 +44,7 @@ onMounted(() => {
   <q-dialog v-model="showDialog">
     <LoginScreen @login="onSignIn" />
   </q-dialog>
-  <router-view />
+  <router-view :session="session" />
 </template>
 
 <style>

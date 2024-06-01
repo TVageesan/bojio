@@ -53,6 +53,10 @@ console.log('calendars',calendars);
 
 const calendarApp = createCalendar({
   selectedDate: getCurrentDate(),
+  dayBoundaries: {
+    start: '07:00',
+    end: '20:00',
+  },
   calendars,
   callbacks:{
     onEventClick(evt) {

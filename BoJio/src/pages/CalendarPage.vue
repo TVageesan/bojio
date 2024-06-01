@@ -10,7 +10,7 @@ const emit = defineEmits(['drawer']);
 const session = inject('session');
 const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
-let count = -1;
+let count = 0;
 
 const loadEvents = () => {
   if (events.value && session.value) {
@@ -62,12 +62,12 @@ const editEventDelete = () => {
 }
 
 const addEvent = () => {
-  console.log('adding',newEvent.value)
   events.value.add({...newEvent.value,id:count++})
 }
 
 const save = () => {
   postEvents(session, events.value.getAll()).then(resp => console.log('post resp', resp));
+  console.log('deleted',deletedEvents);
   if (deletedEvents.length > 0) deleteEvents(deletedEvents).then(resp => console.log('delete resp',resp));
 }
 

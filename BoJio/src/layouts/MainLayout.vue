@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 const drawer = ref(false);
 const miniState = ref(true);
-const select = ref(0);
+const select = ref();
 const menuList = [
   {
     icon: "calendar_today",

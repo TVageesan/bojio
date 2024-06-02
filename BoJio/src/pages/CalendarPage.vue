@@ -3,7 +3,7 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 import CalendarView from 'src/components/CalendarView.vue'
 import TimeInput from 'src/components/TimeInput.vue';
 import { getEvents, postEvents, deleteEvents } from 'src/api';
-import { watch, ref, computed, inject } from 'vue'
+import { watch, ref, computed, inject, onBeforeUnmount } from 'vue'
 import { getCurrentDate } from 'src/utils/getDate'
 
 const emit = defineEmits(['drawer']);
@@ -35,6 +35,8 @@ watch(cal, (eventPlugin) => {
 watch(session, (eventPlugin) => {
   loadEvents();
 });
+
+
 
 const addDialog = ref(false);
 const editDialog = ref(false);
@@ -73,6 +75,7 @@ const save = () => {
   if (deletedEvents.length > 0) deleteEvents(session,deletedEvents).then(resp => console.log('delete resp',resp));
 }
 
+onBeforeUnmount(() => save());
 </script>
 
 <template>

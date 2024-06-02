@@ -3,7 +3,7 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 import GroupList from 'src/components/GroupList.vue'
 import CalendarView from 'src/components/CalendarView.vue'
 import { getGroupEvents } from 'src/api';
-import { ref, computed, inject } from 'vue'
+import { ref, computed, inject, watch } from 'vue'
 
 
 const emit = defineEmits(['drawer','select','delete'])
@@ -38,6 +38,13 @@ const users = [
   'c603c299-9803-4cbc-bdd8-be90fc771df6'
 ]
 
+watch(session,(n,o) => {
+  let user = session.value.user.id;
+  users.push(user)
+  groups.forEach(g => g.users.push(user))
+  console.log('added user',user,'to',users,groups)
+})
+
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
 
 const loadEvents = (index) => {
@@ -58,7 +65,7 @@ const loadEvents = (index) => {
 </script>
 
 <template>
-  <HeaderComponent @drawer="$emit('drawer')" title="Group Schedule" />
+  <HeaderComponent @drawer="$emit('drawer')" :save="false" title="Group Schedule" />
   <q-page class="row no-wrap">
     <div class="col-auto q-pa-md">
         <GroupList :groups="groups" @group-selected="loadEvents"/>

@@ -110,7 +110,7 @@ const save = () => {
     </q-card>
   </q-dialog>
 
-  <HeaderComponent @drawer="$emit('drawer')" @save="save" title="Your Schedule" />
+  <HeaderComponent @drawer="$emit('drawer')" :save="true" @save="save" title="Your Schedule" />
 
   <q-page>
     <q-btn

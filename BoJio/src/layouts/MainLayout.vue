@@ -91,6 +91,10 @@ const menuList = [
 .example::-webkit-scrollbar {
     display: none;
 }
+.scroll {
+
+  overflow: hidden;
+}
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .example {

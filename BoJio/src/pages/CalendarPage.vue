@@ -10,7 +10,7 @@ const emit = defineEmits(['drawer']);
 const session = inject('session');
 const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
-let new_index = 0;
+let index = 0;
 
 const loadEvents = () => {
   if (events.value && session.value) {
@@ -22,7 +22,8 @@ const loadEvents = () => {
         title: evt.title,
       }));
       events.value.set(stored_events);
-      new_index = Math.max.apply(0,stored_events.map((evt)=>evt.id)) + 1;
+      stored_events.forEach(e => {if (e.id > index) index = e.id})
+      console.log('load events',index)
     });
   }
 };
@@ -62,7 +63,7 @@ const editEventDelete = () => {
 }
 
 const addEvent = () => {
-  events.value.add({...newEvent.value,id:new_index++})
+  events.value.add({...newEvent.value,id:index++})
   console.log('getall',events.value.getAll());
 }
 

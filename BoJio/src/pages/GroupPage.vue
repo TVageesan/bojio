@@ -27,7 +27,8 @@ const groups = [
     users:[
       '129cb36b-d07c-464d-9aac-6a16bdc30211',
       '27082bdb-4e07-4cac-b498-5b35f1ea9f43',
-      'c603c299-9803-4cbc-bdd8-be90fc771df6'
+      'c603c299-9803-4cbc-bdd8-be90fc771df6',
+      'c10abc55-4b46-4366-8f17-cdee60d5d211'
     ]
   }
 ]
@@ -35,7 +36,8 @@ const groups = [
 const users = ref([
   '129cb36b-d07c-464d-9aac-6a16bdc30211',
   '27082bdb-4e07-4cac-b498-5b35f1ea9f43',
-  'c603c299-9803-4cbc-bdd8-be90fc771df6'
+  'c603c299-9803-4cbc-bdd8-be90fc771df6',
+  'c10abc55-4b46-4366-8f17-cdee60d5d211'
 ])
 
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x

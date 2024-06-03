@@ -23,7 +23,7 @@ const loadEvents = () => {
       }));
       events.value.set(stored_events);
       stored_events.forEach(e => {if (e.id > index) index = e.id})
-      console.log('load events',index)
+      console.log('load events',stored_events)
     });
   }
 };
@@ -71,7 +71,6 @@ const addEvent = () => {
 
 const save = () => {
   postEvents(session, events.value.getAll()).then(resp => console.log('post resp', resp));
-  console.log('deleted',deletedEvents);
   if (deletedEvents.length > 0) deleteEvents(session,deletedEvents).then(resp => console.log('delete resp',resp));
 }
 

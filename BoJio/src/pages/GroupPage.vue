@@ -2,7 +2,7 @@
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import GroupList from 'src/components/GroupList.vue'
 import CalendarView from 'src/components/CalendarView.vue'
-import { getGroupEvents } from 'src/api';
+import { getGroupEvents,getGroupEventsNew } from 'src/api';
 import { ref, computed, inject, watch } from 'vue'
 
 
@@ -46,6 +46,7 @@ const loadEvents = (index) => {
   let selected = groups[index].users
   console.log('selected group',selected.concat(session.value.user.id));
   if (cal.value && selected.length>0) {
+    getGroupEventsNew(session).then(resp => console.log('test resp',resp.data));
     getGroupEvents(selected.concat(session.value.user.id)).then(resp => {
       const stored_events = resp.data.map(evt => ({
         id: evt.evt_id,

@@ -1,5 +1,4 @@
 <script setup>
-import HeaderComponent from 'src/components/HeaderComponent.vue'
 import GroupList from 'src/components/GroupList.vue'
 import CalendarView from 'src/components/CalendarView.vue'
 import { getGroupEvents } from 'src/api';
@@ -61,7 +60,6 @@ const loadEvents = (index) => {
 </script>
 
 <template>
-  <HeaderComponent @drawer="$emit('drawer')" :save="false" title="Group Schedule" />
   <q-page class="row no-wrap">
     <div class="col-auto q-pa-md">
         <GroupList :groups="groups" @group-selected="loadEvents"/>
@@ -70,5 +68,4 @@ const loadEvents = (index) => {
       <CalendarView :users ="users" :edit="false" ref="cal"/>
     </div>
   </q-page>
-
 </template>

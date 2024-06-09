@@ -7,12 +7,15 @@ import { createCurrentTimePlugin } from '@schedule-x/current-time'
 import { createCalendar, viewDay, viewWeek, viewMonthGrid, viewMonthAgenda } from '@schedule-x/calendar'
 import '@schedule-x/theme-default/dist/index.css'
 import { getCurrentDate } from 'src/utils/getDate'
+import { onMounted } from 'vue'
+import LoggerPlugin from './plugin'
+
 
 const events = createEventsServicePlugin();
 const emit = defineEmits(['evt-click'])
 const { edit, users } = defineProps(['edit','users']);
 let plugins = [events, createCurrentTimePlugin({ fullWeekWidth: true })]
-if (edit) plugins = plugins.concat([createDragAndDropPlugin(15),createResizePlugin(15)])
+if (edit) plugins = plugins.concat([createDragAndDropPlugin(15),createResizePlugin(15), new LoggerPlugin()])
 
 const getRandomHexColor = () => {
   const letters = '0123456789ABCDEF';
@@ -70,6 +73,10 @@ const calendarApp = createCalendar({
 })
 
 defineExpose({ events })
+
+onMounted(() => {
+  window.addEventListener("mousedown",evt => console.log('evt',evt))
+})
 </script>
 
 <template>

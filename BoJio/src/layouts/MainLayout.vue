@@ -20,16 +20,15 @@ const menuList = [
     icon: "search",
     label: "Browse",
     tooltip: "Search for activities",
-    route: '/',
+    route: '/search',
   },
   {
     icon: "event",
     label: "Events",
     tooltip: "Explore events near you",
-    route: '/',
+    route: '/events',
   },
 ];
-
 </script>
 
 <template>
@@ -39,26 +38,27 @@ const menuList = [
         v-model="drawer"
         show-if-above
         :mini="miniState"
-        @mouseover="miniState = false"
-        @mouseout="miniState = true"
         :width="160"
         :breakpoint="500"
         class="bg-grey-3"
       >
-        <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
           <q-list padding>
-            <q-item v-if="miniState">
-              <q-item-section avatar>
-                <q-icon name="mood" />
+              <q-item avatar>
+              <q-item-section class = "text-h5 text-black text-bold" v-if="!miniState">
+                BoJio
+              </q-item-section>
+              <q-item-section side @click="miniState=!miniState">
+                  <q-icon name="menu" v-if="miniState"/>
+                  <q-icon name="close" v-else/>
               </q-item-section>
             </q-item>
-            <q-item class = "text-h5 text-black text-bold" v-else>
-              BoJio
-            </q-item>
+
+            <q-separator/>
+
             <q-item
               v-for="(menuItem, index) in menuList"
               :key="index"
-              :class="{ selected: select == index }"
+              :class="{ selected: menuItem.route == $route.path }"
               @click="select = index;$router.push(menuItem.route)" clickable v-ripple
             >
               <q-item-section avatar>
@@ -72,11 +72,10 @@ const menuList = [
               </q-tooltip>
             </q-item>
           </q-list>
-        </q-scroll-area>
       </q-drawer>
 
       <q-page-container>
-        <router-view @drawer="drawer = !drawer"></router-view>
+        <router-view></router-view>
       </q-page-container>
     </q-layout>
   </div>
@@ -86,19 +85,5 @@ const menuList = [
 .selected{
   background-color: black;
   color:white;
-}
-
-.example::-webkit-scrollbar {
-    display: none;
-}
-.scroll {
-
-  overflow: hidden;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.example {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
 }
 </style>

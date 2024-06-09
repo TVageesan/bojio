@@ -1,5 +1,4 @@
 <script setup>
-import HeaderComponent from 'src/components/HeaderComponent.vue'
 import CalendarView from 'src/components/CalendarView.vue'
 import TimeInput from 'src/components/TimeInput.vue';
 import { getEvents, postEvents, deleteEvents } from 'src/api';
@@ -112,8 +111,6 @@ onBeforeUnmount(() => save());
       </q-card-actions>
     </q-card>
   </q-dialog>
-
-  <HeaderComponent @drawer="$emit('drawer')" :save="true" @save="save" title="Your Schedule" />
 
   <q-page>
     <q-btn

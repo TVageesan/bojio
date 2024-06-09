@@ -2,7 +2,7 @@
 import CalendarView from 'src/components/CalendarView.vue'
 import TimeInput from 'src/components/TimeInput.vue';
 import { getEvents, postEvents, deleteEvents } from 'src/api';
-import { watch, ref, computed, inject, onBeforeUnmount } from 'vue'
+import { watch, ref, computed, inject, onBeforeUnmount, onBeforeMount } from 'vue'
 import { getCurrentDate } from 'src/utils/getDate'
 
 const emit = defineEmits(['drawer']);
@@ -73,7 +73,10 @@ const save = () => {
   if (deletedEvents.length > 0) deleteEvents(session,deletedEvents).then(resp => console.log('delete resp',resp));
 }
 
-onBeforeUnmount(() => save());
+onBeforeMount(() => {
+  window.addEventListener("mouseup", save)
+});
+
 </script>
 
 <template>

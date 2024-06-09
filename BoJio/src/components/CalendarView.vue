@@ -80,5 +80,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <ScheduleXCalendar :calendar-app="calendarApp" />
+  <ScheduleXCalendar :calendar-app="calendarApp"/>
 </template>

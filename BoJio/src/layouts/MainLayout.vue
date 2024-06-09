@@ -29,7 +29,6 @@ const menuList = [
     route: '/events',
   },
 ];
-
 </script>
 
 <template>
@@ -48,16 +47,14 @@ const menuList = [
               <q-item-section class = "text-h5 text-black text-bold" v-if="!miniState">
                 BoJio
               </q-item-section>
-              <q-item-section side @click="miniState=!miniState" class="text-black">
-                <transition>
+              <q-item-section side @click="miniState=!miniState">
                   <q-icon name="menu" v-if="miniState"/>
                   <q-icon name="close" v-else/>
-                </transition>
               </q-item-section>
             </q-item>
 
             <q-separator/>
-            {{ console.log('route',$route) }}
+
             <q-item
               v-for="(menuItem, index) in menuList"
               :key="index"

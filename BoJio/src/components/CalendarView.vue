@@ -74,9 +74,6 @@ const calendarApp = createCalendar({
 
 defineExpose({ events })
 
-onMounted(() => {
-  window.addEventListener("mousedown",evt => console.log('evt',evt))
-})
 </script>
 
 <template>

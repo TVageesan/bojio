@@ -1,25 +1,20 @@
 <script setup>
 import { ref } from "vue";
+
 const email = ref("");
 const password = ref("");
+const toggleP = ref(true);
+const toggleC = ref(true);
+const confirmPassword = ref("");
 const signIn = ref(true);
-const emit = defineEmits("login");
-//TODO: login/signup validation
-const vEmail = (email) => true; //validate email
-const vPassword = (password, signIn) => {
-  if (signIn) {
-    //validate password exists
-    return true;
-  } else {
-    //validate password strength: minimum 6 chars, etc.
-    return true;
-  }
-};
+
+const emit = defineEmits(["login","signup"]);
+
 const sendDetails = () => {
-  if (vEmail(email.value) && vPassword(password.value, signIn.value)) {
-    emit("login", email.value, password.value, signIn.value);
+  if (signIn.value) {
+    emit("login", email.value, password.value);
   } else {
-    console.log("insufficient details");
+    emit("signup", email.value, password.value, confirmPassword.value);
   }
 };
 </script>
@@ -39,16 +34,42 @@ const sendDetails = () => {
       </div>
     </q-card-section>
     <q-card-section>
-      <q-input dense outlined v-model="email" label="Email Address"></q-input>
+      <q-input dense outlined v-model="email" label="Email Address" />
       <q-input
         dense
         outlined
         class="q-mt-md"
         v-model="password"
-        type="password"
+        :type="toggleP ? 'password' : 'text'"
         label="Password"
         @keydown.enter.prevent="sendDetails"
-      ></q-input>
+      >
+      <template v-slot:append>
+          <q-icon
+            :name="toggleP ? 'visibility_off' : 'visibility'"
+            class="cursor-pointer"
+            @click="toggleP = !toggleP"
+          />
+        </template>
+      </q-input>
+      <q-input
+        v-if="!signIn"
+        dense
+        outlined
+        class="q-mt-md"
+        v-model="confirmPassword"
+        :type="toggleC ? 'password' : 'text'"
+        label="Confirm Password"
+        @keydown.enter.prevent="sendDetails"
+      >
+      <template v-slot:append>
+          <q-icon
+            :name="toggleC ? 'visibility_off' : 'visibility'"
+            class="cursor-pointer"
+            @click="toggleC = !toggleC"
+          />
+        </template>
+      </q-input>
     </q-card-section>
     <q-card-section>
       <q-btn

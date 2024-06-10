@@ -1,130 +1,162 @@
 <script setup>
 import CalendarView from 'src/components/CalendarView.vue'
 import TimeInput from 'src/components/TimeInput.vue';
-import { getEvents, postEvents, deleteEvents } from 'src/api';
-import { watch, ref, computed, inject, onBeforeUnmount, onBeforeMount } from 'vue'
+import { getEvents, putEvent, postEvent, deleteEvent, putEvents } from 'src/api';
+import { watch, ref, computed, inject, onBeforeUnmount, onMounted } from 'vue'
 import { getCurrentDate } from 'src/utils/getDate'
 
-const emit = defineEmits(['drawer']);
-const session = inject('session');
+const session = inject("session");
 const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
+
 let index = 0;
 
-const loadEvents = () => {
-  if (events.value && session.value) {
-    getEvents(session).then(resp => {
-      const stored_events = resp.data.map(evt => ({
-        id: evt.evt_id,
-        start: evt.start_time,
-        end: evt.end_time,
-        title: evt.title,
-      }));
-      events.value.set(stored_events);
-      stored_events.forEach(e => {if (e.id > index) index = e.id})
-      console.log('load events',stored_events)
-    });
+const max_index = (arr) => {
+  let curr = -1
+  for (const item in arr){
+    if (curr < item.id) curr = item.id;
   }
+  return curr;
+}
+
+const loadEvents = async () => {
+  const evts = await getEvents(session);
+  events.value.set(evts);
+  index = max_index(evts);
 };
 
-watch(cal, (eventPlugin) => {
-  loadEvents();
-});
+watch([cal, session], () => {if (events.value && session.value) loadEvents()});
 
-watch(session, (eventPlugin) => {
-  loadEvents();
-});
-
-
+//DIALOG
 
 const addDialog = ref(false);
 const editDialog = ref(false);
 
-const currEvent = ref(null);
-let deletedEvents = [];
-
-const newEvent = ref({
-  title: 'New Event',
+const newEvent = () => ({
+  title: "New Event",
   start: getCurrentDate(),
-  end: getCurrentDate()
-})
-
-const editEvent = (evt) => {
-  currEvent.value = evt;
-  editDialog.value = true;
-}
-
-const editEventUpdate = () => {
-  events.value.update(currEvent.value);
-}
-
-const editEventDelete = () => {
-  deletedEvents.push(currEvent.value.id);
-  events.value.remove(currEvent.value.id);
-}
-
-const addEvent = () => {
-  events.value.add({...newEvent.value,id:index++})
-  console.log('getall',events.value.getAll());
-}
-
-const save = () => {
-  postEvents(session, events.value.getAll()).then(resp => console.log('post resp', resp));
-  if (deletedEvents.length > 0) deleteEvents(session,deletedEvents).then(resp => console.log('delete resp',resp));
-}
-
-onBeforeMount(() => {
-  window.addEventListener("mouseup", save)
+  end: getCurrentDate(),
 });
 
+const currEvent = ref();
+
+const addDialogTrigger = () => {
+  currEvent.value = newEvent();
+  addDialog.value = true;
+}
+
+const editEventTrigger = (evt) => {
+  currEvent.value = evt;
+  editDialog.value = true;
+};
+
+//EVENTS CRUD
+
+const editEventUpdate = () => {
+  const evt = currEvent.value;
+  events.value.update(evt);
+  putEvent(session, evt);
+};
+
+const editEventDelete = () => {
+  const id = currEvent.value.id;
+  events.value.remove(id);
+  deleteEvent(session, id);
+};
+
+const addEvent = async () => {
+  const evt = { ...currEvent.value, id: ++index };
+  const resp = await postEvent(session, evt);
+  //console.log('post resp',resp)
+  //add error handling: notify user something went wrong
+  events.value.add(evt);
+};
+
+const save = () => putEvents(session,events.value.getAll()).then(resp => console.log('put resp',resp));
+
+onMounted(() => { //when you have a resize/dnd event but they dont provide a EVENT LISTENER SO :)
+  window.addEventListener("mouseup",save);
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener("mouseup",save);
+})
 </script>
 
 <template>
   <q-dialog v-model="addDialog">
-    <q-card style="min-width: 400px; min-height: 100px;">
+    <q-card style="min-width: 400px; min-height: 100px">
       <q-card-section>
         <div class="text-h6">New Event</div>
       </q-card-section>
       <q-card-section class="row justify-center">
-        <q-input   v-model="newEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;"></q-input>
-        <TimeInput v-model="newEvent.start" label="Start"/>
-        <TimeInput v-model="newEvent.end"   label="End" />
+        <q-input
+          v-model="currEvent.title"
+          label="Event Title"
+          class="q-ma-md"
+          style="width: 100%"
+        ></q-input>
+        <TimeInput v-model="currEvent.start" label="Start" />
+        <TimeInput v-model="currEvent.end" label="End" />
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn flat color="positive" label="Add" @click="addEvent" v-close-popup/>
-        <q-btn flat color="negative" label="Cancel" v-close-popup/>
+        <q-btn
+          flat
+          color="positive"
+          label="Add"
+          @click="addEvent"
+          v-close-popup
+        />
+        <q-btn flat color="negative" label="Cancel" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
 
   <q-dialog v-model="editDialog">
-    <q-card style="min-width: 400px; min-height: 100px;">
+    <q-card style="min-width: 400px; min-height: 100px">
       <q-card-section>
-        <div class="text-h6">Editing {{currEvent.title}}</div>
+        <div class="text-h6">Editing {{ currEvent.title }}</div>
       </q-card-section>
       <q-card-section class="row justify-center">
-        <q-input   v-model="currEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;"></q-input>
-        <TimeInput v-model="currEvent.start" label="Start"/>
-        <TimeInput v-model="currEvent.end"   label="End" />
+        <q-input
+          v-model="currEvent.title"
+          label="Event Title"
+          class="q-ma-md"
+          style="width: 100%"
+        ></q-input>
+        <TimeInput v-model="currEvent.start" label="Start" />
+        <TimeInput v-model="currEvent.end" label="End" />
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn flat color="positive" label="Edit" @click="editEventUpdate" v-close-popup/>
-        <q-btn flat color="negative" label="Delete" @click="editEventDelete" v-close-popup/>
-        <q-btn flat color="primary" label="Cancel" v-close-popup/>
+        <q-btn
+          flat
+          color="positive"
+          label="Edit"
+          @click="editEventUpdate"
+          v-close-popup
+        />
+        <q-btn
+          flat
+          color="negative"
+          label="Delete"
+          @click="editEventDelete"
+          v-close-popup
+        />
+        <q-btn flat color="primary" label="Cancel" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
 
   <q-page>
-    <q-btn
-        class="float"
-        icon="add"
-        @click="addDialog = true"
-        size="lg"
-      >
+    <q-btn class="float" icon="add" @click="addDialogTrigger" size="lg">
       Add Event
-      </q-btn>
-    <CalendarView :users="[]" :edit="true" ref="cal" @evt-click="editEvent" />
+    </q-btn>
+    <CalendarView
+      :users="[]"
+      :edit="true"
+      ref="cal"
+      @evt-click="editEventTrigger"
+    />
   </q-page>
 </template>
 <style>

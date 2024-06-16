@@ -9,18 +9,29 @@ const props = defineProps(['groups']);
     <div :class="['sidebar', { 'collapsed': isCollapsed }]">
       <q-list v-if="!isCollapsed" dense>
         <q-item
-          v-for="(item,index) in groups"
-          :key="index"
+          v-for="group in groups"
+          :key="group.group_id"
           clickable
-          :class="{selected:select == index}"
-          @click ="select=index;$emit('group-selected',index)">
+          class = "section"
+          :class="{selected:select == group.group_id}"
+          @click ="select=group.group_id;$emit('group-selected',group.group_id)">
           <q-item-section class="text-h6">
-            {{ item.name }}
+            {{ group.name }}
           </q-item-section>
           <q-item-section avatar>
-            <q-icon :name="item.icon" />
+            <!-- <q-icon :name="item.icon" /> -->
+            AVATAR
           </q-item-section>
         </q-item>
+        <q-item class="row q-pb-md q-mb-md">
+          <q-btn
+            class = "bg-green text-white col-grow q-ma-xs"
+            icon="add"
+            flat
+            @click="$emit('group-add')"
+          />
+        </q-item>
+
       </q-list>
       <q-btn
         @click="isCollapsed = !isCollapsed"
@@ -58,5 +69,9 @@ const props = defineProps(['groups']);
 .sidebar.collapsed .toggle-btn {
   right: -10px;
   transform: rotate(180deg) translateY(-50%);
+}
+
+.section{
+  height:40px
 }
 </style>

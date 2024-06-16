@@ -1,8 +1,8 @@
 <script setup>
 import CalendarView from 'src/components/CalendarView.vue'
 import TimeInput from 'src/components/TimeInput.vue';
-import { getEvents, putEvent, postEvent, deleteEvent, putEvents } from 'src/api';
-import { watch, ref, computed, inject, onBeforeUnmount, onMounted } from 'vue'
+import { getEvents, putEvent, postEvent, deleteEvent } from 'src/api';
+import { watch, ref, computed, inject } from 'vue'
 import { getCurrentDate } from 'src/utils/getDate'
 
 const session = inject("session");
@@ -45,13 +45,12 @@ const addDialogTrigger = () => {
   addDialog.value = true;
 }
 
-const editEventTrigger = (evt) => {
+const handleEditEvent = (evt) => {
   currEvent.value = evt;
   editDialog.value = true;
 };
 
 //EVENTS CRUD
-
 const editEventUpdate = () => {
   const evt = currEvent.value;
   events.value.update(evt);
@@ -72,15 +71,21 @@ const addEvent = async () => {
   events.value.add(evt);
 };
 
-const save = () => putEvents(session,events.value.getAll()).then(resp => console.log('put resp',resp));
+const handleUpdateEvent = (evt) => {
+  console.log('received',evt);
+  putEvent(session,evt).then(resp => console.log('put resp',resp));
+}
 
-onMounted(() => { //when you have a resize/dnd event but they dont provide a EVENT LISTENER SO :)
-  window.addEventListener("mouseup",save);
-})
+//TODO: Double Click to create a new event
+// const save = (evt) => console.log('dblclick',evt);
 
-onBeforeUnmount(() => {
-  window.removeEventListener("mouseup",save);
-})
+// onMounted(() => {
+//   window.addEventListener("dblclick",save);
+// })
+
+// onBeforeUnmount(() => {
+//   window.removeEventListener("dblclick",save);
+// })
 </script>
 
 <template>
@@ -155,7 +160,8 @@ onBeforeUnmount(() => {
       :users="[]"
       :edit="true"
       ref="cal"
-      @evt-click="editEventTrigger"
+      @evt-click="handleEditEvent"
+      @update = "handleUpdateEvent"
     />
   </q-page>
 </template>

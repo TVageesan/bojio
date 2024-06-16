@@ -3,9 +3,9 @@ import { ref } from "vue";
 
 const email = ref("");
 const password = ref("");
-const toggleP = ref(true);
-const toggleC = ref(true);
+const passwordVisible = ref(true);
 const confirmPassword = ref("");
+const confirmVisible = ref(true);
 const signIn = ref(true);
 
 const emit = defineEmits(["login","signup"]);
@@ -40,15 +40,15 @@ const sendDetails = () => {
         outlined
         class="q-mt-md"
         v-model="password"
-        :type="toggleP ? 'password' : 'text'"
+        :type="passwordVisible ? 'password' : 'text'"
         label="Password"
         @keydown.enter.prevent="sendDetails"
       >
       <template v-slot:append>
           <q-icon
-            :name="toggleP ? 'visibility_off' : 'visibility'"
+            :name="passwordVisible ? 'visibility_off' : 'visibility'"
             class="cursor-pointer"
-            @click="toggleP = !toggleP"
+            @click="passwordVisible = !passwordVisible"
           />
         </template>
       </q-input>
@@ -58,15 +58,15 @@ const sendDetails = () => {
         outlined
         class="q-mt-md"
         v-model="confirmPassword"
-        :type="toggleC ? 'password' : 'text'"
+        :type="confirmVisible ? 'password' : 'text'"
         label="Confirm Password"
         @keydown.enter.prevent="sendDetails"
       >
       <template v-slot:append>
           <q-icon
-            :name="toggleC ? 'visibility_off' : 'visibility'"
+            :name="confirmVisible ? 'visibility_off' : 'visibility'"
             class="cursor-pointer"
-            @click="toggleC = !toggleC"
+            @click="confirmVisible = !confirmVisible"
           />
         </template>
       </q-input>

@@ -7,12 +7,11 @@ import { createCurrentTimePlugin } from '@schedule-x/current-time'
 import { createCalendar, viewDay, viewWeek, viewMonthGrid, viewMonthAgenda } from '@schedule-x/calendar'
 import '@schedule-x/theme-default/dist/index.css'
 import { getCurrentDate } from 'src/utils/getDate'
-import { onMounted } from 'vue'
 import LoggerPlugin from './plugin'
 
 
 const events = createEventsServicePlugin();
-const emit = defineEmits(['evt-click'])
+const emit = defineEmits(['evt-click','update'])
 const { edit, users } = defineProps(['edit','users']);
 let plugins = [events, createCurrentTimePlugin({ fullWeekWidth: true })]
 if (edit) plugins = plugins.concat([createDragAndDropPlugin(15),createResizePlugin(15), new LoggerPlugin()])
@@ -51,8 +50,7 @@ const createColorObj = (user) => {
 
 
 let calendars = {};
-users.forEach(user => calendars[user] = createColorObj(user))
-console.log('calendars',calendars);
+users.forEach(user => calendars[user] = createColorObj(user));
 
 const calendarApp = createCalendar({
   selectedDate: getCurrentDate(),
@@ -63,7 +61,10 @@ const calendarApp = createCalendar({
   calendars,
   callbacks:{
     onEventClick(evt) {
-      emit('evt-click',evt)
+      emit('evt-click',evt);
+    },
+    onEventUpdate(evt){
+      emit('update',evt);
     }
   },
   views: [viewDay, viewWeek, viewMonthGrid, viewMonthAgenda],
@@ -77,5 +78,5 @@ defineExpose({ events })
 </script>
 
 <template>
-  <ScheduleXCalendar :calendar-app="calendarApp"/>
+  <ScheduleXCalendar :calendar-app="calendarApp" />
 </template>

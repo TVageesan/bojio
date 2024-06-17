@@ -11,17 +11,23 @@ const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
 const groups = ref(null);
 
-const users = ref();
-
 const addDialog = ref(false);
 const newName = '';
 
 const loadEvents = async (index) => {
   const resp = await getGroupEvents(index);
-  let curr_users = new Set();
+  let users = []; // to generate calendar ids for each user
+
+  const getColor = (user) => {
+    const search = users.indexOf(user)
+    if (search != -1) return search;
+    users.push(user);
+    return users.length - 1;
+  }
+
   let evts = [];
+
   resp.data.forEach(evt => {
-    curr_users.add(evt.user_id);
     evts.push({
       id: evt.user_id + evt.evt_id,
       start: evt.start_time,
@@ -29,10 +35,10 @@ const loadEvents = async (index) => {
       title: evt.title,
       description: evt.description,
       location: evt.location,
-      calendarId: evt.user_id
+      calendarId: getColor(evt.user_id)
     })
   })
-  users.value = curr_users;
+
   events.value.set(evts);
 }
 
@@ -62,7 +68,7 @@ onMounted(async () => {
       <GroupList :groups="groups" @group-selected="loadEvents" @group-add="addDialog = true"/>
     </div>
     <div class="col" style="overflow-y: auto; height: 100vh;">
-      <CalendarView :users ="users" :edit="false" ref="cal"/>
+      <CalendarView :edit="false" ref="cal"/>
     </div>
   </q-page>
 </template>

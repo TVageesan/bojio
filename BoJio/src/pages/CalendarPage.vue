@@ -75,17 +75,6 @@ const handleUpdateEvent = (evt) => {
   console.log('received',evt);
   putEvent(session,evt).then(resp => console.log('put resp',resp));
 }
-
-//TODO: Double Click to create a new event
-// const save = (evt) => console.log('dblclick',evt);
-
-// onMounted(() => {
-//   window.addEventListener("dblclick",save);
-// })
-
-// onBeforeUnmount(() => {
-//   window.removeEventListener("dblclick",save);
-// })
 </script>
 
 <template>

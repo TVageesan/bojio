@@ -34,12 +34,12 @@ export const postEvent = (session, evt) => supabase.from("events").insert(evtToP
 
 export const putEvent = (session,evt) => supabase.from("events").update(evtToPost(session,evt)).match({evt_id: evt.id, user_id: getUser(session)})
 
-
-// export const  getGroupEventsNew = (session) => supabase.rpc('get_group_events', {input_id: getUser(session)})
-
-// export const getGroupEvents = (user_ids) => supabase.from("events").select().in("user_id", user_ids);
 export const getGroups = (session) => supabase.rpc('fetch_groups',{ input_id: getUser(session) });
+
 export const getGroupEvents = (input_id) => supabase.rpc('fetch_group_events', { input_id });
+
 export const postGroup = (session, name, url) => supabase.from("groups").insert({ name, owner_id: getUser(session), url });
+
 export const putGroup = (name,url,group_id) => supabase.from("groups").update({ name, url }).eq("id",group_id);
+
 export const deleteGroup = (group_id) => supabase.from("groups").delete().eq("id",group_id);

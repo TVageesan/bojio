@@ -5,7 +5,7 @@ export default class LoggerPlugin {
 
   init($app) {
     console.log('init called with',$app);
-    addEventListener("dblclick", (event) => {console.log('dblclick',evt)});
+    addEventListener("dblclick", (event) => {console.log('dblclick',event)});
   }
 }
 

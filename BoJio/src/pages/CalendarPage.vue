@@ -7,9 +7,8 @@ import { getCurrentDate } from 'src/utils/getDate'
 
 const session = inject("session");
 const cal = ref(null);
+const index = ref(0);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
-
-let index = 0;
 
 const max_index = (arr) => {
   let curr = -1
@@ -20,12 +19,13 @@ const max_index = (arr) => {
 }
 
 const loadEvents = async () => {
+  if (!events.value || !session.value) return;
   const evts = await getEvents(session);
   events.value.set(evts);
-  index = max_index(evts);
+  index.value = max_index(evts);
 };
 
-watch([cal, session], () => {if (events.value && session.value) loadEvents()});
+watch([cal, session], loadEvents);
 
 //DIALOG
 
@@ -38,7 +38,7 @@ const newEvent = () => ({
   end: getCurrentDate(),
 });
 
-const currEvent = ref();
+const currEvent = ref({});
 
 const addDialogTrigger = () => {
   currEvent.value = newEvent();
@@ -63,17 +63,14 @@ const editEventDelete = () => {
   deleteEvent(session, id);
 };
 
-const addEvent = async () => {
-  const evt = { ...currEvent.value, id: ++index };
-  const resp = await postEvent(session, evt);
-  //console.log('post resp',resp)
-  //add error handling: notify user something went wrong
+const addEvent = () => {
+  const evt = { ...currEvent.value, id: ++index.value };
   events.value.add(evt);
+  postEvent(session, evt);
 };
 
-const handleUpdateEvent = (evt) => {
-  console.log('received',evt);
-  putEvent(session,evt).then(resp => console.log('put resp',resp));
+const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
+  putEvent(session,evt);
 }
 </script>
 

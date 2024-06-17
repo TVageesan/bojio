@@ -13,19 +13,17 @@ import {
 } from "@schedule-x/calendar";
 import "@schedule-x/theme-default/dist/index.css";
 import { getCurrentDate } from "src/utils/getDate";
-import LoggerPlugin from "./plugin";
 
 const events = createEventsServicePlugin();
 const emit = defineEmits(["evt-click", "update"]);
-const { edit } = defineProps(["edit", "users"]);
-let plugins = [events, createCurrentTimePlugin({ fullWeekWidth: true })];
-if (edit)
-  plugins = plugins.concat([
-    createDragAndDropPlugin(15),
-    createResizePlugin(15),
-    new LoggerPlugin(),
-  ]);
-const generateCalendarStyling = () => {
+
+const { edit } = defineProps(["edit"]);
+const corePlugins = [events, createCurrentTimePlugin({ fullWeekWidth: true })]
+const editPlugins = [createDragAndDropPlugin(15), createResizePlugin(15)]
+const createPlugins = () => edit ? corePlugins.concat(editPlugins) : corePlugins
+
+const createCalendarStyling = () => {
+  //generate random hex colour
   const getRandomHexColor = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -52,24 +50,27 @@ const generateCalendarStyling = () => {
     );
   };
 
-  // Function to generate a color object
+  // Check if background is too dark for black text
+  const isDark = (bgColor) => {
+    return parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2
+  }
+
   const createColorObj = (user) => {
-    const mainColor = getRandomHexColor();
-    const containerColor = adjustColor(mainColor, 80); // Lighten the main color
-    const onContainerColor = adjustColor(mainColor, -80); // Darken the main color
+    const mainColor = getRandomHexColor(); // Side bar colour
+    const containerColor = adjustColor(mainColor, 80); // Main container colour
 
     return {
       colorName: user,
       lightColors: {
         main: mainColor,
         container: containerColor,
-        onContainer: onContainerColor,
+        onContainer: isDark(containerColor) ? '#FFFFFF' : '#000000'
       },
     };
   };
 
   let calendars = {};
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 100; i++) { //NOTE: Not best practice, but alternative (dynamic creation) is very very mafan
     calendars[i] = createColorObj(i);
   }
   return calendars;
@@ -81,7 +82,7 @@ const calendarApp = createCalendar({
     start: "06:00",
     end: "22:00",
   },
-  calendars: generateCalendarStyling(),
+  calendars: createCalendarStyling(),
   callbacks: {
     onEventClick(evt) {
       emit("evt-click", evt);
@@ -93,12 +94,13 @@ const calendarApp = createCalendar({
   views: [viewDay, viewWeek, viewMonthGrid, viewMonthAgenda],
   defaultView: viewWeek.name,
   events: [],
-  plugins,
+  plugins: createPlugins(),
 });
 
 defineExpose({ events });
 </script>
 
 <template>
-  <ScheduleXCalendar :calendar-app="calendarApp" />
+  <ScheduleXCalendar :calendar-app="calendarApp"/>
 </template>
+

@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { QDialog, QCard, QCardSection, QCardActions, QBtn } from 'quasar';
+import { QDrawer, QScrollArea, QList, QItem, QItemSection, QIcon, QTooltip, QLayout, QPageContainer } from 'quasar';
+import ProfileDialog from 'src/components/ProfileDialog.vue';
 
 const router = useRouter();
 const drawer = ref(false);
@@ -100,19 +101,7 @@ const handleMenuClick = (menuItem, index) => {
         <router-view @drawer="drawer = !drawer"></router-view>
       </q-page-container>
 
-      <q-dialog v-model="profileDialog" persistent>
-        <q-card>
-          <q-card-section class="text-h6">
-            Profile
-          </q-card-section>
-          <q-card-section>
-            Your profile details go here.
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn flat label="Close" @click="profileDialog = false" />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
+      <ProfileDialog :isOpen="profileDialog" @update:isOpen="profileDialog = $event" />
     </q-layout>
   </div>
 </template>

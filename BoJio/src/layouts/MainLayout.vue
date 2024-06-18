@@ -1,9 +1,14 @@
 <script setup>
-import { route } from 'quasar/wrappers';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { QDialog, QCard, QCardSection, QCardActions, QBtn } from 'quasar';
+
+const router = useRouter();
 const drawer = ref(false);
 const miniState = ref(true);
 const select = ref(-1);
+const profileDialog = ref(false);
+
 const menuList = [
   {
     icon: "calendar_today",
@@ -33,10 +38,18 @@ const menuList = [
     icon: "person",
     label: "Profile",
     tooltip: "View Profile",
-    route: '/profile',
+    action: () => { profileDialog.value = true; },
   },
 ];
 
+const handleMenuClick = (menuItem, index) => {
+  select.value = index;
+  if (menuItem.route) {
+    router.push(menuItem.route);
+  } else if (menuItem.action) {
+    menuItem.action();
+  }
+};
 </script>
 
 <template>
@@ -59,16 +72,16 @@ const menuList = [
                 <q-icon name="mood" />
               </q-item-section>
             </q-item>
-            <q-item class = "text-h5 text-black text-bold" v-else>
+            <q-item class="text-h5 text-black text-bold" v-else>
               BoJio
             </q-item>
             <q-item
               v-for="(menuItem, index) in menuList"
               :key="index"
               :class="{ selected: select == index }"
-              @click="select = index;$router.push(menuItem.route)"
-              clickable v-ripple>
-
+              @click="handleMenuClick(menuItem, index)"
+              clickable v-ripple
+            >
               <q-item-section avatar>
                 <q-icon :name="menuItem.icon" />
               </q-item-section>
@@ -79,7 +92,6 @@ const menuList = [
                 {{ menuItem.tooltip }}
               </q-tooltip>
             </q-item>
-
           </q-list>
         </q-scroll-area>
       </q-drawer>
@@ -87,13 +99,27 @@ const menuList = [
       <q-page-container>
         <router-view @drawer="drawer = !drawer"></router-view>
       </q-page-container>
+
+      <q-dialog v-model="profileDialog" persistent>
+        <q-card>
+          <q-card-section class="text-h6">
+            Profile
+          </q-card-section>
+          <q-card-section>
+            Your profile details go here.
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Close" @click="profileDialog = false" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </q-layout>
   </div>
 </template>
 
 <style>
-.selected{
+.selected {
   background-color: black;
-  color:white;
+  color: white;
 }
 </style>

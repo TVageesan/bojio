@@ -14,6 +14,13 @@ const routes = [
       { path: '', component: () => import('src/pages/GroupPage.vue') }
     ]
   },
+  {
+    path: '/profile',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/ProfilePage.vue') }
+    ]
+  },
 
 
   // Always leave this as last one,

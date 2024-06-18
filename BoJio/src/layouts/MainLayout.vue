@@ -33,11 +33,12 @@ const menuList = [
     icon: "person",
     label: "Profile",
     tooltip: "View Profile",
-    route: '/',
+    route: '/profile',
   },
 ];
 
 </script>
+
 <template>
   <div class="q-pa-md">
     <q-layout view="lHh Lpr lff">

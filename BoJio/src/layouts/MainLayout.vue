@@ -29,6 +29,12 @@ const menuList = [
     tooltip: "Explore events near you",
     route: '/',
   },
+  {
+    icon: "person",
+    label: "Profile",
+    tooltip: "View Profile",
+    route: '/',
+  },
 ];
 
 </script>
@@ -59,8 +65,9 @@ const menuList = [
               v-for="(menuItem, index) in menuList"
               :key="index"
               :class="{ selected: select == index }"
-              @click="select = index;$router.push(menuItem.route)" clickable v-ripple
-            >
+              @click="select = index;$router.push(menuItem.route)"
+              clickable v-ripple>
+
               <q-item-section avatar>
                 <q-icon :name="menuItem.icon" />
               </q-item-section>
@@ -71,6 +78,7 @@ const menuList = [
                 {{ menuItem.tooltip }}
               </q-tooltip>
             </q-item>
+
           </q-list>
         </q-scroll-area>
       </q-drawer>
@@ -81,6 +89,7 @@ const menuList = [
     </q-layout>
   </div>
 </template>
+
 <style>
 .selected{
   background-color: black;

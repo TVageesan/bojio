@@ -8,8 +8,6 @@ const confirmPassword = ref("");
 const confirmVisible = ref(true);
 const signIn = ref(true);
 
-
-
 const emit = defineEmits(["login","signup"]);
 
 const sendDetails = () => {

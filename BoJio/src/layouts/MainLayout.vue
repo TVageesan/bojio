@@ -15,25 +15,25 @@ const menuList = [
     icon: "calendar_today",
     label: "Calendar",
     tooltip: "View your personal calendar",
-    route: '/',
+    route: "/",
   },
   {
     icon: "groups",
     label: "Groups",
     tooltip: "View your friend groups",
-    route: '/group',
+    route: "/group",
   },
   {
     icon: "search",
     label: "Browse",
     tooltip: "Search for activities",
-    route: '/',
+    route: "/search",
   },
   {
     icon: "event",
     label: "Events",
     tooltip: "Explore events near you",
-    route: '/',
+    route: "/events",
   },
   {
     icon: "person",
@@ -60,45 +60,63 @@ const handleMenuClick = (menuItem, index) => {
         v-model="drawer"
         show-if-above
         :mini="miniState"
-        @mouseover="miniState = false"
-        @mouseout="miniState = true"
         :width="160"
         :breakpoint="500"
         class="bg-grey-3"
       >
-        <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
-          <q-list padding>
-            <q-item v-if="miniState">
-              <q-item-section avatar>
-                <q-icon name="mood" />
-              </q-item-section>
-            </q-item>
-            <q-item class="text-h5 text-black text-bold" v-else>
-              BoJio
-            </q-item>
-            <q-item
-              v-for="(menuItem, index) in menuList"
-              :key="index"
-              :class="{ selected: select == index }"
-              @click="handleMenuClick(menuItem, index)"
-              clickable v-ripple
+        <q-list padding>
+          <q-item avatar>
+            <q-item-section
+              class="text-h5 text-black text-bold"
+              v-if="!miniState"
             >
-              <q-item-section avatar>
-                <q-icon :name="menuItem.icon" />
-              </q-item-section>
-              <q-item-section>
-                {{ menuItem.label }}
-              </q-item-section>
-              <q-tooltip anchor="center left" self="center right" style="white-space: nowrap">
-                {{ menuItem.tooltip }}
-              </q-tooltip>
-            </q-item>
-          </q-list>
-        </q-scroll-area>
+              BoJio
+            </q-item-section>
+            <q-item-section side @click="miniState = !miniState" class="text-black">
+              <q-icon name="menu" v-if="miniState"/>
+              <q-icon name="close" v-else />
+            </q-item-section>
+          </q-item>
+
+          <q-separator />
+          <div>
+            <q-item
+            v-for="(menuItem, index) in menuList"
+            :key="index"
+            :class="{ selected: menuItem.route == $route.path }"
+            @click="
+              select = index;
+              $router.push(menuItem.route);
+            "
+            clickable
+            v-ripple
+          >
+            <q-item-section avatar>
+              <q-icon :name="menuItem.icon" />
+            </q-item-section>
+            <q-item-section>
+              {{ menuItem.label }}
+            </q-item-section>
+            <q-tooltip
+              anchor="center left"
+              self="center right"
+              style="white-space: nowrap"
+            >
+              {{ menuItem.tooltip }}
+            </q-tooltip>
+          </q-item>
+          </div>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="delete" />
+            </q-item-section>
+          </q-item>
+        </q-list>
       </q-drawer>
 
       <q-page-container>
-        <router-view @drawer="drawer = !drawer"></router-view>
+        <router-view></router-view>
       </q-page-container>
 
       <ProfileDialog :isOpen="profileDialog" @update:isOpen="profileDialog = $event" />
@@ -109,6 +127,6 @@ const handleMenuClick = (menuItem, index) => {
 <style>
 .selected {
   background-color: black;
-  color: white;
+  color:  white;
 }
 </style>

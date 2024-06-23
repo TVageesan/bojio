@@ -99,7 +99,6 @@ const getAcademicStartDate = (year,sem) => {
   }
 }
 const base_url = 'https://api.nusmods.com/v2'
-const test = 'https://nusmods.com/timetable/sem-1/share?EE2026=TUT:05,LEC:01,LAB:02&EE2211=TUT:12,LEC:01&MA1100=LEC:1'
 
 const parseQueryString = (queryString) => {
   const url = new URL(queryString);
@@ -122,13 +121,13 @@ const parseQueryString = (queryString) => {
   };
 }
 
-export const getModules = async (index,url = test) => {
+export const getModules = async (index,url) => {
   const { semester, modules }  = parseQueryString(url);
   const year = new Date().getFullYear();
   const acad_year = getAcademicYear(year);
   const semStart = getAcademicStartDate( year, semester );
   console.log('semester',semester,'semStart',semStart);
-  const events = [];
+  const new_events = [];
   const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
   const generateEvents = (module_code,timetable) => {
@@ -154,11 +153,11 @@ export const getModules = async (index,url = test) => {
       let startDate = new Date(start);
       const endDate = new Date(end);
       while (startDate < endDate){
-        events.push(createEvent(startDate));
+        new_events.push(createEvent(startDate));
         startDate = addToDate(startDate,{days: 7});
       }
     }else{
-      for (const week of weeks) events.push(createEvent(createDate(week)))
+      for (const week of weeks) new_events.push(createEvent(createDate(week)))
     }
   }
 
@@ -186,5 +185,5 @@ export const getModules = async (index,url = test) => {
 
   const codes = Object.keys(modules);
   for (const code of codes) await getModuleByCode(code,acad_year);
-  return { events, index };
+  return { new_events, new_index: index };
 }

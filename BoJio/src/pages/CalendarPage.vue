@@ -18,22 +18,20 @@ const max_index = (arr) => {
   return curr;
 }
 
+const test = 'https://nusmods.com/timetable/sem-1/share?EE2026=TUT:05,LEC:01,LAB:02&EE2211=TUT:12,LEC:01&MA1100=LEC:1'
+
+const importNUSMods = async (url) => {
+  const { new_events, new_index } = await getModules(index.value,url)
+  index.value = new_index;
+  events.value.set(events.value.getAll().concat(new_events))
+}
+
 const loadEvents = async () => {
   if (!events.value || !session.value) return;
   const evts = await getEvents(session);
-  //events.value.set(evts);
   index.value = max_index(evts);
-  const eee = await getModules(index.value)
-  eee.events.sort(function(a, b) {
-  var keyA = new Date(a.start),
-    keyB = new Date(b.start);
-  // Compare the 2 dates
-  if (keyA < keyB) return -1;
-  if (keyA > keyB) return 1;
-  return 0;
-})
-  console.log('received',eee.events)
-  events.value.set(eee.events)
+  events.value.set(evts);
+  importNUSMods(test); //for testing
 };
 
 watch([cal, session], loadEvents);

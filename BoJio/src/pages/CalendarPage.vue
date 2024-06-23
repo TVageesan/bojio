@@ -1,7 +1,7 @@
 <script setup>
 import CalendarView from 'src/components/CalendarView.vue'
 import TimeInput from 'src/components/TimeInput.vue';
-import { getEvents, putEvent, postEvent, deleteEvent } from 'src/api';
+import { getEvents, putEvent, postEvent, deleteEvent, getModules } from 'src/api';
 import { watch, ref, computed, inject } from 'vue'
 import { getCurrentDate } from 'src/utils/getDate'
 
@@ -21,14 +21,24 @@ const max_index = (arr) => {
 const loadEvents = async () => {
   if (!events.value || !session.value) return;
   const evts = await getEvents(session);
-  events.value.set(evts);
+  //events.value.set(evts);
   index.value = max_index(evts);
+  const eee = await getModules(index.value)
+  eee.events.sort(function(a, b) {
+  var keyA = new Date(a.start),
+    keyB = new Date(b.start);
+  // Compare the 2 dates
+  if (keyA < keyB) return -1;
+  if (keyA > keyB) return 1;
+  return 0;
+})
+  console.log('received',eee.events)
+  events.value.set(eee.events)
 };
 
 watch([cal, session], loadEvents);
 
 //DIALOG
-
 const addDialog = ref(false);
 const editDialog = ref(false);
 
@@ -143,7 +153,6 @@ const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
       Add Event
     </q-btn>
     <CalendarView
-      :users="[]"
       :edit="true"
       ref="cal"
       @evt-click="handleEditEvent"

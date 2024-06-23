@@ -23,6 +23,7 @@
     "@schedule-x/theme-default": "^1.42.2",
     "@schedule-x/vue": "^1.38.1",
     "@supabase/supabase-js": "^2.43.4",
+    "axios": "^1.7.2",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0"

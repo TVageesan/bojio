@@ -48,10 +48,20 @@ const newEvent = () => ({
 
 const currEvent = ref({});
 
+<<<<<<< HEAD
 const addDialogTrigger = () => {
   currEvent.value = newEvent();
   addDialog.value = true;
 }
+=======
+const newEvent = ref({
+  title: 'New Event',
+  start: getCurrentDate(),
+  end: getCurrentDate(),
+  location: 'Add Location',
+  description: 'Add Description'
+})
+>>>>>>> feature/calendar
 
 const handleEditEvent = (evt) => {
   currEvent.value = evt;
@@ -89,6 +99,7 @@ const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
         <div class="text-h6">New Event</div>
       </q-card-section>
       <q-card-section class="row justify-center">
+<<<<<<< HEAD
         <q-input
           v-model="currEvent.title"
           label="Event Title"
@@ -97,6 +108,25 @@ const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
         ></q-input>
         <TimeInput v-model="currEvent.start" label="Start" />
         <TimeInput v-model="currEvent.end" label="End" />
+=======
+        <q-input v-model="newEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;">
+          <template v-slot:label>
+            <span style="font-size: 1.5rem;">Event Title</span>
+          </template>
+        </q-input>
+        <TimeInput v-model="newEvent.start" label="Start"/>
+        <TimeInput v-model="newEvent.end" label="End" />
+        <q-input v-model="newEvent.location" label="Location" class="q-ma-md" style="width: 100%;">
+          <template v-slot:before>
+            <q-icon name="place" />
+          </template>
+        </q-input>
+        <q-input v-model="newEvent.description" label="Description" class="q-ma-md" style="width: 100%;">
+          <template v-slot:before>
+            <q-icon name="notes" />
+          </template>
+        </q-input>
+>>>>>>> feature/calendar
       </q-card-section>
       <q-card-actions align="right">
         <q-btn

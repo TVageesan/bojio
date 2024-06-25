@@ -80,30 +80,27 @@ const handleMenuClick = (menuItem, index) => {
           <q-separator />
           <div>
             <q-item
-            v-for="(menuItem, index) in menuList"
-            :key="index"
-            :class="{ selected: menuItem.route == $route.path }"
-            @click="
-              select = index;
-              $router.push(menuItem.route);
-            "
-            clickable
-            v-ripple
-          >
-            <q-item-section avatar>
-              <q-icon :name="menuItem.icon" />
-            </q-item-section>
-            <q-item-section>
-              {{ menuItem.label }}
-            </q-item-section>
-            <q-tooltip
-              anchor="center left"
-              self="center right"
-              style="white-space: nowrap"
+              v-for="(menuItem, index) in menuList"
+              :key="index"
+              :class="{ selected: menuItem.route == $route.path }"
+              @click="handleMenuClick(menuItem, index)"
+              clickable
+              v-ripple
             >
-              {{ menuItem.tooltip }}
-            </q-tooltip>
-          </q-item>
+              <q-item-section avatar>
+                <q-icon :name="menuItem.icon" />
+              </q-item-section>
+              <q-item-section>
+                {{ menuItem.label }}
+              </q-item-section>
+              <q-tooltip
+                anchor="center left"
+                self="center right"
+                style="white-space: nowrap"
+              >
+                {{ menuItem.tooltip }}
+              </q-tooltip>
+            </q-item>
           </div>
 
           <q-item>
@@ -126,6 +123,6 @@ const handleMenuClick = (menuItem, index) => {
 <style>
 .selected {
   background-color: black;
-  color:  white;
+  color: white;
 }
 </style>

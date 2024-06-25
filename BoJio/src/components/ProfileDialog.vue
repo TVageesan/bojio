@@ -13,7 +13,7 @@ const closeDialog = () => {
 
 
 <template>
-  <q-dialog v-model="isOpen" persistent>
+  <q-dialog :model-value="isOpen" @update:model-value="closeDialog" persistent>
     <q-card>
         <q-img src="https://cdn.quasar.dev/img/chicken-salad.jpg" />
       <q-card-section class="text-h6">

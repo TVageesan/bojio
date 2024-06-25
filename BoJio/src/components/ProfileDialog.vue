@@ -13,6 +13,11 @@ const closeDialog = () => {
   <q-dialog :model-value="isOpen" @update:model-value="closeDialog" persistent>
     <q-card>
         <q-img src="https://cdn.quasar.dev/img/chicken-salad.jpg" />
+        <q-uploader
+          url="http://localhost:4444/upload"
+          label="Change Profile Picture"
+          style="max-width: 300px"
+        />
       <q-card-section class="text-h6">
         Profile
       </q-card-section>

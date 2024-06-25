@@ -54,25 +54,60 @@ const menuList = [
             </q-item>
             <q-item class = "text-h5 text-black text-bold" v-else>
               BoJio
-            </q-item>
-            <q-item
-              v-for="(menuItem, index) in menuList"
-              :key="index"
-              :class="{ selected: select == index }"
-              @click="select = index;$router.push(menuItem.route)" clickable v-ripple
+            </q-item-section>
+            <q-item-section
+              side
+              @click="miniState = !miniState"
+              class="text-black"
             >
-              <q-item-section avatar>
-                <q-icon :name="menuItem.icon" />
-              </q-item-section>
-              <q-item-section>
-                {{ menuItem.label }}
-              </q-item-section>
-              <q-tooltip anchor="center left" self="center right" style="white-space: nowrap">
-                {{ menuItem.tooltip }}
-              </q-tooltip>
-            </q-item>
-          </q-list>
-        </q-scroll-area>
+              <q-icon name="menu" v-if="miniState" />
+              <q-icon name="close" v-else />
+            </q-item-section>
+          </q-item>
+
+          <q-separator />
+          <q-item
+            v-for="(menuItem, index) in menuList"
+            :key="index"
+            :class="{ selected: menuItem.route == $route.path }"
+            @click="$router.push(menuItem.route)"
+            clickable
+            v-ripple
+          >
+            <q-item-section avatar>
+              <q-icon :name="menuItem.icon" />
+            </q-item-section>
+            <q-item-section>
+              {{ menuItem.label }}
+            </q-item-section>
+            <q-tooltip
+              anchor="center left"
+              self="center right"
+              style="white-space: nowrap"
+            >
+              {{ menuItem.tooltip }}
+            </q-tooltip>
+          </q-item>
+        </q-list>
+
+        <q-item
+          clickable
+          v-ripple
+        >
+          <q-item-section avatar>
+            <q-icon name="person" />
+          </q-item-section>
+          <q-item-section>
+            Profile
+          </q-item-section>
+          <q-tooltip
+            anchor="center left"
+            self="center right"
+            style="white-space: nowrap"
+          >
+            View your profile
+          </q-tooltip>
+        </q-item>
       </q-drawer>
 
       <q-page-container>

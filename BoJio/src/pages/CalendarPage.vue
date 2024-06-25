@@ -88,8 +88,8 @@ onMounted(() => {
     </q-card>
   </q-dialog>
 
-  <q-dialog v-model="editDialog">
-    <q-card style="min-width: 400px; min-height: 100px;">
+  <q-dialog :v-model="false">
+    <q-card style="min-width: 400px; min-height: 100px">
       <q-card-section>
         <div class="text-h6">Editing {{currEvent.title}}</div>
       </q-card-section>

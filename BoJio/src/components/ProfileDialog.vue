@@ -20,9 +20,7 @@ const closeDialog = () => {
         />
       <q-card-section class="text-h6">
         Profile
-      </q-card-section>
-      <q-card-section>
-        Your profile details go here.
+        <q-input v-model="text" label="Name" />
       </q-card-section>
       <q-card-actions align="right">
         <q-btn flat label="Close" @click="closeDialog" />

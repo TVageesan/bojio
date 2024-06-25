@@ -37,7 +37,9 @@ let deletedEvents = [];
 const newEvent = ref({
   title: 'New Event',
   start: getCurrentDate(),
-  end: getCurrentDate()
+  end: getCurrentDate(),
+  location: 'Add Location',
+  description: 'Add Description'
 })
 
 const editEvent = (evt) => {
@@ -77,9 +79,23 @@ onMounted(() => {
         <div class="text-h6">New Event</div>
       </q-card-section>
       <q-card-section class="row justify-center">
-        <q-input   v-model="newEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;"></q-input>
+        <q-input v-model="newEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;">
+          <template v-slot:label>
+            <span style="font-size: 1.5rem;">Event Title</span>
+          </template>
+        </q-input>
         <TimeInput v-model="newEvent.start" label="Start"/>
-        <TimeInput v-model="newEvent.end"   label="End" />
+        <TimeInput v-model="newEvent.end" label="End" />
+        <q-input v-model="newEvent.location" label="Location" class="q-ma-md" style="width: 100%;">
+          <template v-slot:before>
+            <q-icon name="place" />
+          </template>
+        </q-input>
+        <q-input v-model="newEvent.description" label="Description" class="q-ma-md" style="width: 100%;">
+          <template v-slot:before>
+            <q-icon name="notes" />
+          </template>
+        </q-input>
       </q-card-section>
       <q-card-actions align="right">
         <q-btn flat color="positive" label="Add" @click="addEvent" v-close-popup/>

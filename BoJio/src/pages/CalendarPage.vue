@@ -1,9 +1,16 @@
 <script setup>
-import CalendarView from 'src/components/CalendarView.vue'
-import TimeInput from 'src/components/TimeInput.vue';
-import { getEvents, putEvent, postEvent, deleteEvent, getModules } from 'src/api';
-import { watch, ref, computed, inject } from 'vue'
-import { getCurrentDate } from 'src/utils/getDate'
+import CalendarView from "src/components/CalendarView.vue";
+import EventDialog from "src/components/EventDialog.vue";
+import {
+  getEvents,
+  putEvent,
+  postEvent,
+  deleteEvent,
+  getModules,
+} from "src/api";
+import { watch, ref, computed, inject } from "vue";
+import { toTime, toTimePlusHour } from "src/utils/getDate";
+
 
 const session = inject("session");
 const cal = ref(null);
@@ -11,54 +18,63 @@ const index = ref(0);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
 
 const max_index = (arr) => {
-  let curr = -1
-  for (const item in arr){
+  let curr = -1;
+  for (const item of arr) {
     if (curr < item.id) curr = item.id;
   }
   return curr;
-}
+};
 
-const test = 'https://nusmods.com/timetable/sem-1/share?EE2026=TUT:05,LEC:01,LAB:02&EE2211=TUT:12,LEC:01&MA1100=LEC:1'
+const test =
+  "https://nusmods.com/timetable/sem-1/share?EE2026=TUT:05,LEC:01,LAB:02&EE2211=TUT:12,LEC:01&MA1100=LEC:1";
 
 const importNUSMods = async (url) => {
-  const { new_events, new_index } = await getModules(index.value,url)
+  const { new_events, new_index } = await getModules(index.value, url);
   index.value = new_index;
-  events.value.set(events.value.getAll().concat(new_events))
-}
+  const curr_events = events.value.getAll()
+  events.value.set(curr_events.concat(new_events));
+};
 
 const loadEvents = async () => {
   if (!events.value || !session.value) return;
   const evts = await getEvents(session);
   index.value = max_index(evts);
   events.value.set(evts);
-  importNUSMods(test); //for testing
+  //importNUSMods(test); //for testing
 };
 
 watch([cal, session], loadEvents);
 
 //DIALOG
-const addDialog = ref(false);
-const editDialog = ref(false);
+const openDialog = ref(false); //flag to trigger dialog open
+const isEditDialog = ref(false); //track which type of dialog is being opened
 
 const currEvent = ref({});
 
 const addDialogTrigger = () => {
   currEvent.value = newEvent();
-  addDialog.value = true;
-}
-
-const newEvent = () => ({
-  title: 'New Event',
-  start: getCurrentDate(),
-  end: getCurrentDate(),
-  location: 'Add Location',
-  description: 'Add Description'
-});
-
-const handleEditEvent = (evt) => {
-  currEvent.value = evt;
-  editDialog.value = true;
+  openDialog.value = true;
+  isEditDialog.value = false;
 };
+
+const editDialogTrigger = (evt) => {
+  currEvent.value = evt;
+  openDialog.value = true;
+  isEditDialog.value = true;
+};
+
+const newEvent = () => {
+  const current = new Date();
+  return({
+    title: "",
+    start: toTime(current),
+    end: toTimePlusHour(current),
+    location: "",
+    description: "",
+  })
+};
+
+
 
 //EVENTS CRUD
 const editEventUpdate = () => {
@@ -75,86 +91,27 @@ const editEventDelete = () => {
 
 const addEvent = () => {
   const evt = { ...currEvent.value, id: ++index.value };
+  if (evt.title == '') evt.title = 'New Event';
   events.value.add(evt);
   postEvent(session, evt);
 };
 
-const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
-  putEvent(session,evt);
-}
+const handleUpdateEvent = (evt) => {
+  //triggers on drag/drop or resize
+  putEvent(session, evt);
+};
+
+const handleAdd = () => isEditDialog.value ? editEventUpdate() : addEvent()
 </script>
 
 <template>
-  <q-dialog v-model="addDialog">
-    <q-card style="min-width: 400px; min-height: 100px">
-      <q-card-section>
-        <div class="text-h6">New Event</div>
-      </q-card-section>
-      <q-card-section class="row justify-center">
-        <q-input v-model="currEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;">
-          <template v-slot:label>
-            <span style="font-size: 1.5rem;">Event Title</span>
-          </template>
-        </q-input>
-        <TimeInput v-model="currEvent.start" label="Start"/>
-        <TimeInput v-model="currEvent.end" label="End" />
-        <q-input v-model="currEvent.location" label="Location" class="q-ma-md" style="width: 100%;">
-          <template v-slot:before>
-            <q-icon name="place" />
-          </template>
-        </q-input>
-        <q-input v-model="currEvent.description" label="Description" class="q-ma-md" style="width: 100%;">
-          <template v-slot:before>
-            <q-icon name="notes" />
-          </template>
-        </q-input>
-      </q-card-section>
-      <q-card-actions align="right">
-        <q-btn
-          flat
-          color="positive"
-          label="Add"
-          @click="addEvent"
-          v-close-popup
-        />
-        <q-btn flat color="negative" label="Cancel" v-close-popup />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
-
-  <q-dialog :v-model="false">
-    <q-card style="min-width: 400px; min-height: 100px">
-      <q-card-section>
-        <div class="text-h6">Editing {{ currEvent.title }}</div>
-      </q-card-section>
-      <q-card-section class="row justify-center">
-        <q-input
-          v-model="currEvent.title"
-          label="Event Title"
-          class="q-ma-md"
-          style="width: 100%"
-        ></q-input>
-        <TimeInput v-model="currEvent.start" label="Start" />
-        <TimeInput v-model="currEvent.end" label="End" />
-      </q-card-section>
-      <q-card-actions align="right">
-        <q-btn
-          flat
-          color="positive"
-          label="Edit"
-          @click="editEventUpdate"
-          v-close-popup
-        />
-        <q-btn
-          flat
-          color="negative"
-          label="Delete"
-          @click="editEventDelete"
-          v-close-popup
-        />
-        <q-btn flat color="primary" label="Cancel" v-close-popup />
-      </q-card-actions>
-    </q-card>
+  <q-dialog v-model="openDialog">
+    <EventDialog
+      v-model="currEvent"
+      :isEditable = "isEditDialog"
+      @add="handleAdd"
+      @delete="editEventDelete"
+    />
   </q-dialog>
 
   <q-page>
@@ -164,8 +121,8 @@ const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
     <CalendarView
       :edit="true"
       ref="cal"
-      @evt-click="handleEditEvent"
-      @update = "handleUpdateEvent"
+      @evt-click="editDialogTrigger"
+      @update="handleUpdateEvent"
     />
   </q-page>
 </template>

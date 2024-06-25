@@ -12,7 +12,6 @@ const events = computed(() => cal.value?.events); //ref to events plugin of sche
 const groups = ref(null);
 const groupTitle = ref('');
 
-
 const addDialog = ref(false);
 const newName = ref('');
 const splitterModel = ref(20);

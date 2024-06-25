@@ -31,7 +31,6 @@ const menuList = [
 </script>
 
 <template>
-  <div class="q-pa-md">
     <q-layout view="lHh Lpr lff">
       <q-drawer
         v-model="drawer"
@@ -103,12 +102,12 @@ const menuList = [
           </q-tooltip>
         </q-item>
       </q-drawer>
-
-      <q-page-container>
-        <router-view></router-view>
-      </q-page-container>
+      <q-scroll-area style="height: 100vh; max-width: 100vw;" :bar-style="{width: '0px'}" :thumb-style="{width: '0px'}">
+        <q-page-container>
+          <router-view></router-view>
+        </q-page-container>
+      </q-scroll-area>
     </q-layout>
-  </div>
 </template>
 
 <style>

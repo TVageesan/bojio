@@ -13,6 +13,7 @@ const groups = ref(null);
 
 const addDialog = ref(false);
 const newName = '';
+const splitterModel = ref(20);
 
 const loadEvents = async (index) => {
   const resp = await getGroupEvents(index);
@@ -50,7 +51,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <q-dialog v-model="addDialog">
+  <q-dialog v-model="addDialog" seperator-class="sep">
     <q-card style="min-width: 400px; min-height: 100px">
       <q-card-section>
         <div class="text-h6 text-center">Create a Group</div>
@@ -63,12 +64,22 @@ onMounted(async () => {
       </q-card-section>
     </q-card>
   </q-dialog>
-  <q-page class="row no-wrap">
-    <div class="col-auto q-pa-md">
-      <GroupList :groups="groups" @group-selected="loadEvents" @group-add="addDialog = true"/>
-    </div>
-    <div class="col" style="overflow-y: auto; height: 100vh;">
-      <CalendarView :edit="false" ref="cal"/>
-    </div>
+  <q-page>
+    <q-splitter
+      v-model="splitterModel"
+      separator-class="bg-gray"
+      separator-style="width: 7px"
+      :limits="[10, 40]"
+    >
+      <template v-slot:before>
+        <GroupList :groups="groups" @group-selected="loadEvents" @group-add="addDialog = true"/>
+      </template>
+      <template v-slot:separator>
+        <q-icon color="grey" size="30px" name="more_vert" />
+      </template>
+      <template v-slot:after>
+        <CalendarView :edit="false" ref="cal"/>
+      </template>
+    </q-splitter>
   </q-page>
 </template>

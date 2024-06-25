@@ -85,23 +85,26 @@ const createCalendarStyling = () => {
 
 const calendarApp = createCalendar({
   selectedDate: getCurrentDate(),
-  callbacks:{
+  dayBoundaries: {
+    start: "06:00",
+    end: "22:00",
+  },
+  calendars: createCalendarStyling(),
+  callbacks: {
     onEventClick(evt) {
-      emit('evt-click',evt)
-    }
+      emit("evt-click", evt);
+    },
+    onEventUpdate(evt) {
+      emit("update", evt);
+    },
   },
   views: [viewDay, viewWeek, viewMonthGrid, viewMonthAgenda],
   defaultView: viewWeek.name,
   events: [],
-  plugins:[
-    events,
-    createDragAndDropPlugin(15),
-    createResizePlugin(15),
-    createCurrentTimePlugin({ fullWeekWidth: true })
-  ]
-})
+  plugins: createPlugins(),
+});
 
-defineExpose({ events })
+defineExpose({ events });
 </script>
 
 <template>
@@ -115,3 +118,4 @@ defineExpose({ events })
     </ScheduleXCalendar>
   </div>
 </template>
+

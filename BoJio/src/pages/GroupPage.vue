@@ -1,12 +1,12 @@
 <script setup>
-import HeaderComponent from 'src/components/HeaderComponent.vue'
+import GroupList from 'src/components/GroupList.vue'
 import CalendarView from 'src/components/CalendarView.vue'
-import { getEvents } from 'src/api';
-import { onMounted, watch, ref, computed, inject } from 'vue'
-import { getCurrentDate } from 'src/utils/getDate'
+import { getGroups, getGroupEvents, postGroup, putGroup, deleteGroup, getModules } from 'src/api';
+import { ref, computed, inject, onMounted } from 'vue'
 
-const emit = defineEmits(['drawer'])
+const emit = defineEmits(['drawer','select','delete'])
 const session = inject('session');
+
 const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
 const groups = ref(null);
@@ -43,15 +43,30 @@ const loadEvents = async (index,name) => {
     })
   })
 
-const currEvent = ref(null)
+  events.value.set(evts);
+}
 
-const save = () => {}
+onMounted(async () => {
+  const resp = await getGroups(session);
+  groups.value = resp.data;
+});
 
-onMounted(() => {})
 </script>
 
 <template>
-  <HeaderComponent @drawer="$emit('drawer')" @save="save" title="Group's Shared Schedule" />
+  <q-dialog v-model="addDialog" seperator-class="sep">
+    <q-card style="min-width: 400px; min-height: 100px">
+      <q-card-section>
+        <div class="text-h6 text-center">Create a Group</div>
+        <q-input lable="Your Group Name" v-model="newName"/>
+        <q-btn label="create" />
+      </q-card-section>
+      <q-separator inset/>
+      <q-card-section>
+        <div class="text-h6 text-center">Join an existing one</div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
   <q-page>
     <q-splitter
       v-model="splitterModel"

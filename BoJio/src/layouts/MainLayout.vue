@@ -1,37 +1,35 @@
 <script setup>
-import { route } from 'quasar/wrappers';
-import { ref } from 'vue';
+import { ref } from "vue";
 const drawer = ref(false);
 const miniState = ref(true);
-const select = ref(-1);
 const menuList = [
   {
     icon: "calendar_today",
     label: "Calendar",
     tooltip: "View your personal calendar",
-    route: '/',
+    route: "/",
   },
   {
     icon: "groups",
     label: "Groups",
     tooltip: "View your friend groups",
-    route: '/group',
+    route: "/group",
   },
   {
     icon: "search",
     label: "Browse",
     tooltip: "Search for activities",
-    route: '/',
+    route: "/search",
   },
   {
     icon: "event",
     label: "Events",
     tooltip: "Explore events near you",
-    route: '/',
+    route: "/events",
   },
 ];
-
 </script>
+
 <template>
   <div class="q-pa-md">
     <q-layout view="lHh Lpr lff">
@@ -39,20 +37,16 @@ const menuList = [
         v-model="drawer"
         show-if-above
         :mini="miniState"
-        @mouseover="miniState = false"
-        @mouseout="miniState = true"
         :width="160"
         :breakpoint="500"
-        class="bg-grey-3"
+        class="bg-grey-3 column"
       >
-        <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
-          <q-list padding>
-            <q-item v-if="miniState">
-              <q-item-section avatar>
-                <q-icon name="mood" />
-              </q-item-section>
-            </q-item>
-            <q-item class = "text-h5 text-black text-bold" v-else>
+        <q-list style="flex: 1">
+          <q-item avatar>
+            <q-item-section
+              class="text-h5 text-black text-bold"
+              v-if="!miniState"
+            >
               BoJio
             </q-item-section>
             <q-item-section
@@ -111,14 +105,15 @@ const menuList = [
       </q-drawer>
 
       <q-page-container>
-        <router-view @drawer="drawer = !drawer"></router-view>
+        <router-view></router-view>
       </q-page-container>
     </q-layout>
   </div>
 </template>
+
 <style>
-.selected{
+.selected {
   background-color: black;
-  color:white;
+  color: white;
 }
 </style>

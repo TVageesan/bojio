@@ -1,105 +1,123 @@
 <script setup>
-import HeaderComponent from 'src/components/HeaderComponent.vue'
 import CalendarView from 'src/components/CalendarView.vue'
 import TimeInput from 'src/components/TimeInput.vue';
-import { getEvents, postEvents, deleteEvents } from 'src/api';
-import { onMounted, watch, ref, computed, inject } from 'vue'
+import { getEvents, putEvent, postEvent, deleteEvent, getModules } from 'src/api';
+import { watch, ref, computed, inject } from 'vue'
 import { getCurrentDate } from 'src/utils/getDate'
 
-const emit = defineEmits(['drawer'])
-const session = inject('session');
+const session = inject("session");
 const cal = ref(null);
+const index = ref(0);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
-let count = -1;
 
-watch(events, (eventPlugin, _) => {
-  getEvents().then(resp => {
-    const stored_events = resp.data.map(
-      evt => ({
-        id: evt.evt_id,
-        start: evt.start_time,
-        end: evt.end_time,
-        title: evt.title,
-      })
-    )
-    eventPlugin.set(stored_events);
-    count = stored_events.length;
-  });
-})
+const max_index = (arr) => {
+  let curr = -1
+  for (const item in arr){
+    if (curr < item.id) curr = item.id;
+  }
+  return curr;
+}
 
+const test = 'https://nusmods.com/timetable/sem-1/share?EE2026=TUT:05,LEC:01,LAB:02&EE2211=TUT:12,LEC:01&MA1100=LEC:1'
+
+const importNUSMods = async (url) => {
+  const { new_events, new_index } = await getModules(index.value,url)
+  index.value = new_index;
+  events.value.set(events.value.getAll().concat(new_events))
+}
+
+const loadEvents = async () => {
+  if (!events.value || !session.value) return;
+  const evts = await getEvents(session);
+  index.value = max_index(evts);
+  events.value.set(evts);
+  importNUSMods(test); //for testing
+};
+
+watch([cal, session], loadEvents);
+
+//DIALOG
 const addDialog = ref(false);
 const editDialog = ref(false);
 
-const currEvent = ref(null)
-let deletedEvents = [];
+const currEvent = ref({});
 
+const addDialogTrigger = () => {
+  currEvent.value = newEvent();
+  addDialog.value = true;
+}
 
-const newEvent = ref({
+const newEvent = () => ({
   title: 'New Event',
   start: getCurrentDate(),
   end: getCurrentDate(),
   location: 'Add Location',
   description: 'Add Description'
-})
+});
 
-const editEvent = (evt) => {
+const handleEditEvent = (evt) => {
   currEvent.value = evt;
   editDialog.value = true;
-}
+};
 
+//EVENTS CRUD
 const editEventUpdate = () => {
-  events.value.update(currEvent.value);
-}
+  const evt = currEvent.value;
+  events.value.update(evt);
+  putEvent(session, evt);
+};
 
 const editEventDelete = () => {
-  deletedEvents.push(currEvent.value.id);
-  events.value.remove(currEvent.value.id);
-}
+  const id = currEvent.value.id;
+  events.value.remove(id);
+  deleteEvent(session, id);
+};
 
 const addEvent = () => {
-  console.log('adding',newEvent.value)
-  events.value.add({...newEvent.value,id:count++})
+  const evt = { ...currEvent.value, id: ++index.value };
+  events.value.add(evt);
+  postEvent(session, evt);
+};
+
+const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
+  putEvent(session,evt);
 }
-
-const save = () => {
-  postEvents(session, events.value.getAll()).then(resp => console.log('post resp', resp));
-  if (deletedEvents.length > 0) deleteEvents(deletedEvents).then(resp => console.log('delete resp',resp));
-}
-
-onMounted(() => {
-  console.log('curr count',count);
-})
-
 </script>
 
 <template>
   <q-dialog v-model="addDialog">
-    <q-card style="min-width: 400px; min-height: 100px;">
+    <q-card style="min-width: 400px; min-height: 100px">
       <q-card-section>
         <div class="text-h6">New Event</div>
       </q-card-section>
       <q-card-section class="row justify-center">
-        <q-input v-model="newEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;">
+        <q-input v-model="currEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;">
           <template v-slot:label>
             <span style="font-size: 1.5rem;">Event Title</span>
           </template>
         </q-input>
-        <TimeInput v-model="newEvent.start" label="Start"/>
-        <TimeInput v-model="newEvent.end" label="End" />
-        <q-input v-model="newEvent.location" label="Location" class="q-ma-md" style="width: 100%;">
+        <TimeInput v-model="currEvent.start" label="Start"/>
+        <TimeInput v-model="currEvent.end" label="End" />
+        <q-input v-model="currEvent.location" label="Location" class="q-ma-md" style="width: 100%;">
           <template v-slot:before>
             <q-icon name="place" />
           </template>
         </q-input>
-        <q-input v-model="newEvent.description" label="Description" class="q-ma-md" style="width: 100%;">
+        <q-input v-model="currEvent.description" label="Description" class="q-ma-md" style="width: 100%;">
           <template v-slot:before>
             <q-icon name="notes" />
           </template>
         </q-input>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn flat color="positive" label="Add" @click="addEvent" v-close-popup/>
-        <q-btn flat color="negative" label="Cancel" v-close-popup/>
+        <q-btn
+          flat
+          color="positive"
+          label="Add"
+          @click="addEvent"
+          v-close-popup
+        />
+        <q-btn flat color="negative" label="Cancel" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -107,24 +125,57 @@ onMounted(() => {
   <q-dialog :v-model="false">
     <q-card style="min-width: 400px; min-height: 100px">
       <q-card-section>
-        <div class="text-h6">Editing {{currEvent.title}}</div>
+        <div class="text-h6">Editing {{ currEvent.title }}</div>
       </q-card-section>
       <q-card-section class="row justify-center">
-        <q-input   v-model="currEvent.title" label="Event Title" class="q-ma-md" style="width: 100%;"></q-input>
-        <TimeInput v-model="currEvent.start" label="Start"/>
-        <TimeInput v-model="currEvent.end"   label="End" />
+        <q-input
+          v-model="currEvent.title"
+          label="Event Title"
+          class="q-ma-md"
+          style="width: 100%"
+        ></q-input>
+        <TimeInput v-model="currEvent.start" label="Start" />
+        <TimeInput v-model="currEvent.end" label="End" />
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn flat color="positive" label="Edit" @click="editEventUpdate" v-close-popup/>
-        <q-btn flat color="negative" label="Delete" @click="editEventDelete" v-close-popup/>
-        <q-btn flat color="primary" label="Cancel" v-close-popup/>
+        <q-btn
+          flat
+          color="positive"
+          label="Edit"
+          @click="editEventUpdate"
+          v-close-popup
+        />
+        <q-btn
+          flat
+          color="negative"
+          label="Delete"
+          @click="editEventDelete"
+          v-close-popup
+        />
+        <q-btn flat color="primary" label="Cancel" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
 
-  <q-btn @click="addDialog = true">Add Event</q-btn>
-  <HeaderComponent @drawer="$emit('drawer')" @save="save" title="Your Schedule" />
   <q-page>
-    <CalendarView ref="cal" @evt-click="editEvent" />
+    <q-btn class="float" icon="add" @click="addDialogTrigger" size="lg">
+      Add Event
+    </q-btn>
+    <CalendarView
+      :edit="true"
+      ref="cal"
+      @evt-click="handleEditEvent"
+      @update = "handleUpdateEvent"
+    />
   </q-page>
 </template>
+<style>
+.float {
+  position: fixed;
+  background-color: white;
+  color: black;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+</style>

@@ -1,16 +1,13 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
-
 const props = defineProps({
   isOpen: Boolean
 });
 const emit = defineEmits(['update:isOpen']);
-
 const closeDialog = () => {
   emit('update:isOpen', false);
 };
 </script>
-
 
 <template>
   <q-dialog :model-value="isOpen" @update:model-value="closeDialog" persistent>

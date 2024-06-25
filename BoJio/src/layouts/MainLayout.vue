@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { QDrawer, QScrollArea, QList, QItem, QItemSection, QIcon, QTooltip, QLayout, QPageContainer } from 'quasar';
 import ProfileDialog from 'src/components/ProfileDialog.vue';
 
 const router = useRouter();
@@ -119,7 +118,7 @@ const handleMenuClick = (menuItem, index) => {
         <router-view></router-view>
       </q-page-container>
 
-      <ProfileDialog :isOpen="profileDialog" @update:isOpen="profileDialog = $event" />
+      <ProfileDialog :isOpen="profileDialog" @update:isOpen="val => profileDialog = val" />
     </q-layout>
   </div>
 </template>

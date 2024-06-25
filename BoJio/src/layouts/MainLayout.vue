@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { QDrawer, QScrollArea, QList, QItem, QItemSection, QIcon, QTooltip, QLayout, QPageContainer } from 'quasar';
 import ProfileDialog from 'src/components/ProfileDialog.vue';
 
 const router = useRouter();
@@ -80,27 +81,30 @@ const handleMenuClick = (menuItem, index) => {
           <q-separator />
           <div>
             <q-item
-              v-for="(menuItem, index) in menuList"
-              :key="index"
-              :class="{ selected: menuItem.route == $route.path }"
-              @click="handleMenuClick(menuItem, index)"
-              clickable
-              v-ripple
+            v-for="(menuItem, index) in menuList"
+            :key="index"
+            :class="{ selected: menuItem.route == $route.path }"
+            @click="
+              select = index;
+              $router.push(menuItem.route);
+            "
+            clickable
+            v-ripple
+          >
+            <q-item-section avatar>
+              <q-icon :name="menuItem.icon" />
+            </q-item-section>
+            <q-item-section>
+              {{ menuItem.label }}
+            </q-item-section>
+            <q-tooltip
+              anchor="center left"
+              self="center right"
+              style="white-space: nowrap"
             >
-              <q-item-section avatar>
-                <q-icon :name="menuItem.icon" />
-              </q-item-section>
-              <q-item-section>
-                {{ menuItem.label }}
-              </q-item-section>
-              <q-tooltip
-                anchor="center left"
-                self="center right"
-                style="white-space: nowrap"
-              >
-                {{ menuItem.tooltip }}
-              </q-tooltip>
-            </q-item>
+              {{ menuItem.tooltip }}
+            </q-tooltip>
+          </q-item>
           </div>
 
           <q-item>
@@ -115,7 +119,7 @@ const handleMenuClick = (menuItem, index) => {
         <router-view></router-view>
       </q-page-container>
 
-      <ProfileDialog :isOpen="profileDialog" @update:isOpen="val => profileDialog = val" />
+      <ProfileDialog :isOpen="profileDialog" @update:isOpen="profileDialog = $event" />
     </q-layout>
   </div>
 </template>
@@ -123,6 +127,6 @@ const handleMenuClick = (menuItem, index) => {
 <style>
 .selected {
   background-color: black;
-  color: white;
+  color:  white;
 }
 </style>

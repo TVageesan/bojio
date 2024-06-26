@@ -107,6 +107,8 @@ defineExpose({ events });
 </script>
 
 <template>
-  <ScheduleXCalendar :calendar-app="calendarApp"/>
+  <div style = "overflow-y: hidden;height:100vh">
+    <ScheduleXCalendar :calendar-app="calendarApp"/>
+  </div>
 </template>
 

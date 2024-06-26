@@ -64,37 +64,70 @@ const handleMenuClick = (menuItem, index) => {
         @mouseout="miniState = true"
         :width="160"
         :breakpoint="500"
-        class="bg-grey-3"
+        class="bg-grey-3 column"
       >
-        <q-scroll-area class="fit" :horizontal-thumb-style="{ opacity: 0 }">
-          <q-list padding>
-            <q-item v-if="miniState">
-              <q-item-section avatar>
-                <q-icon name="mood" />
-              </q-item-section>
-            </q-item>
-            <q-item class="text-h5 text-black text-bold" v-else>
-              BoJio
-            </q-item>
-            <q-item
-              v-for="(menuItem, index) in menuList"
-              :key="index"
-              :class="{ selected: select == index }"
-              @click="handleMenuClick(menuItem, index)"
-              clickable v-ripple
+        <q-list style="flex: 1">
+          <q-item avatar>
+            <q-item-section
+              class="text-h5 text-black text-bold"
+              v-if="!miniState"
             >
-              <q-item-section avatar>
-                <q-icon :name="menuItem.icon" />
-              </q-item-section>
-              <q-item-section>
-                {{ menuItem.label }}
-              </q-item-section>
-              <q-tooltip anchor="center left" self="center right" style="white-space: nowrap">
-                {{ menuItem.tooltip }}
-              </q-tooltip>
-            </q-item>
-          </q-list>
-        </q-scroll-area>
+              BoJio
+            </q-item-section>
+            <q-item-section
+              side
+              @click="miniState = !miniState"
+              class="text-black"
+            >
+              <q-icon name="menu" v-if="miniState" />
+              <q-icon name="close" v-else />
+            </q-item-section>
+          </q-item>
+
+          <q-separator />
+          <q-item
+            v-for="(menuItem, index) in menuList"
+            :key="index"
+            :class="{ selected: menuItem.route == $route.path }"
+            @click="$router.push(menuItem.route)"
+            clickable
+            v-ripple
+          >
+            <q-item-section avatar>
+              <q-icon :name="menuItem.icon" />
+            </q-item-section>
+            <q-item-section>
+              {{ menuItem.label }}
+            </q-item-section>
+            <q-tooltip
+              anchor="center left"
+              self="center right"
+              style="white-space: nowrap"
+            >
+              {{ menuItem.tooltip }}
+            </q-tooltip>
+          </q-item>
+        </q-list>
+
+        <q-item
+          clickable
+          v-ripple
+        >
+          <q-item-section avatar>
+            <q-icon name="person" />
+          </q-item-section>
+          <q-item-section>
+            Profile
+          </q-item-section>
+          <q-tooltip
+            anchor="center left"
+            self="center right"
+            style="white-space: nowrap"
+          >
+            View your profile
+          </q-tooltip>
+        </q-item>
+
       </q-drawer>
       <q-page-container>
         <router-view @drawer="drawer = !drawer"></router-view>

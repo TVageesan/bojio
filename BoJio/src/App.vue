@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, provide } from "vue";
+import { ref, onMounted, computed, provide, watch } from "vue";
 import { supabase } from "./utils/supabaseClient";
 import LoginScreen from "./components/LoginScreen.vue";
 import { useQuasar } from "quasar";

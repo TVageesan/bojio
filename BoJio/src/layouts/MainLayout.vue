@@ -57,8 +57,8 @@ const menuList = [
           </q-item>
 
           <q-separator />
-
-          <q-item
+          <div>
+            <q-item
             v-for="(menuItem, index) in menuList"
             :key="index"
             :class="{ selected: menuItem.route == $route.path }"
@@ -82,6 +82,13 @@ const menuList = [
             >
               {{ menuItem.tooltip }}
             </q-tooltip>
+          </q-item>
+          </div>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="delete" />
+            </q-item-section>
           </q-item>
         </q-list>
       </q-drawer>

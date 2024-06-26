@@ -1,8 +1,8 @@
 <script setup>
 import GroupList from 'src/components/GroupList.vue'
 import CalendarView from 'src/components/CalendarView.vue'
-import { getGroups, getGroupEvents, postGroup, putGroup, deleteGroup } from 'src/api';
-import { ref, computed, inject, watch, onMounted } from 'vue'
+import { getGroups, getGroupEvents, postGroup, putGroup, deleteGroup, getModules } from 'src/api';
+import { ref, computed, inject, onMounted } from 'vue'
 
 const emit = defineEmits(['drawer','select','delete'])
 const session = inject('session');

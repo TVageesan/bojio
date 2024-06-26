@@ -47,7 +47,6 @@ onMounted(async () => {
   const resp = await getGroups(session);
   groups.value = resp.data;
 });
-
 </script>
 
 <template>

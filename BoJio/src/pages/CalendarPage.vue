@@ -169,6 +169,7 @@ const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
     />
   </q-page>
 </template>
+
 <style>
 .float {
   position: fixed;

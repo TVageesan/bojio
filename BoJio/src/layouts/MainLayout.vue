@@ -1,12 +1,9 @@
 <script setup>
 import { ref, provide } from 'vue';
-import { useRouter } from 'vue-router';
 import ProfileDialog from 'src/components/ProfileDialog.vue';
 
-const router = useRouter();
 const drawer = ref(false);
 const miniState = ref(true);
-const select = ref(-1);
 const profileDialog = ref(false);
 const profileText = ref('');
 const profileUrl = ref('');
@@ -36,22 +33,8 @@ const menuList = [
     label: "Events",
     tooltip: "Explore events near you",
     route: '/',
-  },
-  {
-    icon: "person",
-    label: "Profile",
-    tooltip: "View Profile",
-    action: () => { profileDialog.value = true; },
-  },
-];
-const handleMenuClick = (menuItem, index) => {
-  select.value = index;
-  if (menuItem.route) {
-    router.push(menuItem.route);
-  } else if (menuItem.action) {
-    menuItem.action();
   }
-};
+];
 </script>
 <template>
   <div class="q-pa-md">
@@ -60,8 +43,6 @@ const handleMenuClick = (menuItem, index) => {
         v-model="drawer"
         show-if-above
         :mini="miniState"
-        @mouseover="miniState = false"
-        @mouseout="miniState = true"
         :width="160"
         :breakpoint="500"
         class="bg-grey-3 column"
@@ -112,6 +93,7 @@ const handleMenuClick = (menuItem, index) => {
         <q-item
           clickable
           v-ripple
+          @click="profileDialog = true"
         >
           <q-item-section avatar>
             <q-icon name="person" />
@@ -130,7 +112,7 @@ const handleMenuClick = (menuItem, index) => {
 
       </q-drawer>
       <q-page-container>
-        <router-view @drawer="drawer = !drawer"></router-view>
+        <router-view></router-view>
       </q-page-container>
 
       <ProfileDialog v-model="profileDialog" />

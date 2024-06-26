@@ -64,6 +64,7 @@ onMounted(async () => {
       </q-card-section>
     </q-card>
   </q-dialog>
+  
   <q-page>
     <q-splitter
       v-model="splitterModel"
@@ -72,6 +73,7 @@ onMounted(async () => {
       :limits="[10, 40]"
     >
       <template v-slot:before>
+        <q-input v-model="search" placeholder="Search groups" />
         <GroupList :groups="groups" @group-selected="loadEvents" @group-add="addDialog = true"/>
       </template>
       <template v-slot:separator>

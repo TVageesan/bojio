@@ -13,6 +13,7 @@ const evtToPost = (session,evt) => ({
   title: evt.title,
   description: evt.description,
   location: evt.location,
+  imported: false,
 })
 
 const evtToFetch = (evt) => ({
@@ -22,6 +23,7 @@ const evtToFetch = (evt) => ({
   title: evt.title,
   description: evt.description,
   location: evt.location,
+  imported: evt.imported
 })
 
 const getUser = (session) => session.value.user.id;
@@ -33,9 +35,12 @@ export const getEvents = async (session) => {
 
 export const deleteEvent = (session,evt_id) => supabase.from('events').delete().match({evt_id, user_id: getUser(session)});
 
-export const postEvent = (session, evt) => supabase.from("events").insert(evtToPost(session,evt));
+export const postEvent = (session, evt) => supabase.from("events").insert(evtToPost(session,evt)).select();
 
-export const putEvent = (session,evt) => supabase.from("events").update(evtToPost(session,evt)).match({evt_id: evt.id, user_id: getUser(session)})
+export const overwriteEvents = (session) => supabase.from("events").delete().match({ imported: true, user_id: getUser(session)});
+export const importEvents = (session,evts) => supabase.from("events").insert(evts.map(evt => ({...evtToPost(session,evt),imported: true}))).select();
+
+export const putEvent = (session,evt) => supabase.from("events").update(evtToPost(session,evt)).match({evt_id: evt.id, user_id: getUser(session)}).select();
 
 export const getGroups = (session) => supabase.rpc('fetch_groups',{ input_id: getUser(session) });
 

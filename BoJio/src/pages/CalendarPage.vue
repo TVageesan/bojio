@@ -7,6 +7,8 @@ import {
   postEvent,
   deleteEvent,
   getModules,
+  overwriteEvents,
+  importEvents
 } from "src/api";
 import { watch, ref, computed, inject } from "vue";
 import { toTime, toTimePlusHour } from "src/utils/getDate";
@@ -16,24 +18,36 @@ const session = inject("session");
 const cal = ref(null);
 const index = ref(0);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
+const imported = ref(false);
 
 const max_index = (arr) => {
   let curr = -1;
   for (const item of arr) {
     if (curr < item.id) curr = item.id;
+    if (item.imported) imported.value = true;
   }
   return curr;
 };
-
-const test =
-  "https://nusmods.com/timetable/sem-1/share?EE2026=TUT:05,LEC:01,LAB:02&EE2211=TUT:12,LEC:01&MA1100=LEC:1";
 
 const importNUSMods = async (url) => {
   const { new_events, new_index } = await getModules(index.value, url);
   index.value = new_index;
   const curr_events = events.value.getAll()
+
+  if (imported.value) {
+    overwriteEvents(session);
+    curr_events = curr_events.filter(({imported}) => imported == false);
+  }
+  importEvents(session,new_events);
   events.value.set(curr_events.concat(new_events));
+  imported.value = true;
 };
+
+const handleImport = (url) => {
+  console.log('url',url);
+  importNUSMods(url);
+  openDialog.value = false;
+}
 
 const loadEvents = async () => {
   if (!events.value || !session.value) return;
@@ -74,13 +88,12 @@ const newEvent = () => {
   })
 };
 
-
-
 //EVENTS CRUD
 const editEventUpdate = () => {
   const evt = currEvent.value;
   events.value.update(evt);
-  putEvent(session, evt);
+  console.log('new evt',evt);
+  putEvent(session, evt).then(resp => console.log('put resp',resp));
 };
 
 const editEventDelete = () => {
@@ -93,35 +106,35 @@ const addEvent = () => {
   const evt = { ...currEvent.value, id: ++index.value };
   if (evt.title == '') evt.title = 'New Event';
   events.value.add(evt);
-  postEvent(session, evt);
+  postEvent(session, evt).then(resp => console.log('post resp',resp));
 };
 
 const handleUpdateEvent = (evt) => {
   //triggers on drag/drop or resize
   putEvent(session, evt);
 };
-
-const handleAdd = () => isEditDialog.value ? editEventUpdate() : addEvent()
 </script>
 
 <template>
   <q-dialog v-model="openDialog">
     <EventDialog
       v-model="currEvent"
+      :imported="imported"
       :isEditable = "isEditDialog"
-      @add="handleAdd"
+      @add="addEvent"
+      @update="editEventUpdate"
       @delete="editEventDelete"
+      @import="handleImport"
     />
   </q-dialog>
-
   <q-page>
     <q-btn class="float" icon="add" @click="addDialogTrigger" size="lg">
       Add Event
     </q-btn>
-    <CalendarView
+      <CalendarView
       :edit="true"
       ref="cal"
-      @evt-click="editDialogTrigger"
+      @edit="editDialogTrigger"
       @update="handleUpdateEvent"
     />
   </q-page>

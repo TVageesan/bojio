@@ -47,6 +47,21 @@ export const putGroup = (name,url,group_id) => supabase.from("groups").update({ 
 
 export const deleteGroup = (group_id) => supabase.from("groups").delete().eq("id",group_id);
 
+export const uploadImage = async (session, file) => {
+  const fileExt = file.name.split('.').pop();
+  const filePath = `public/${getUser(session)}.${fileExt}`
+  console.log('uploading to',filePath,file);
+  const resp = supabase.storage.from('avatars').upload(filePath, file)
+  console.log('resp');
+}
+
+export const downloadImage = async (path) => {
+  const { data, error } = await supabase.storage.from('avatars').download(path)
+
+  const url = URL.createObjectURL(data)
+  return url;
+}
+
 //NUSModsAPI
 const lessonTypeMap = {
   "DLEC": "DesignLecture",

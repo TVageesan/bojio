@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, provide } from 'vue';
 import { useRouter } from 'vue-router';
 import ProfileDialog from 'src/components/ProfileDialog.vue';
 
@@ -8,6 +8,10 @@ const drawer = ref(false);
 const miniState = ref(true);
 const select = ref(-1);
 const profileDialog = ref(false);
+const profileText = ref('');
+const profileUrl = ref('');
+provide('pText',profileText);
+provide('pUrl',profileUrl);
 const menuList = [
   {
     icon: "calendar_today",
@@ -96,7 +100,7 @@ const handleMenuClick = (menuItem, index) => {
         <router-view @drawer="drawer = !drawer"></router-view>
       </q-page-container>
 
-      <ProfileDialog :isOpen="profileDialog" @update:isOpen="profileDialog = $event" />
+      <ProfileDialog v-model="profileDialog" />
     </q-layout>
   </div>
 </template>

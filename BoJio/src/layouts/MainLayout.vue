@@ -6,9 +6,7 @@ const drawer = ref(false);
 const miniState = ref(true);
 const profileDialog = ref(false);
 const profileText = ref('');
-const profileUrl = ref('');
 provide('pText',profileText);
-provide('pUrl',profileUrl);
 const menuList = [
   {
     icon: "calendar_today",
@@ -109,8 +107,8 @@ const menuList = [
             View your profile
           </q-tooltip>
         </q-item>
-
       </q-drawer>
+
       <q-page-container>
         <router-view></router-view>
       </q-page-container>

@@ -49,13 +49,15 @@ export const deleteGroup = (group_id) => supabase.from("groups").delete().eq("id
 
 export const uploadImage = async (session, file) => {
   const fileExt = file.name.split('.').pop();
-  const filePath = `${getUser(session)}/profile.${fileExt}`
-  await supabase.storage.from('avatars').upload(filePath, file)
+  const filePath = `${getUser(session)}/profile.jpeg`
+  await supabase.storage.from('avatars').update(filePath, file,{upsert:true})
 }
 
-export const downloadImage = async (path) => {
+export const downloadImage = async (session) => {
+  const path = `${getUser(session)}/profile.jpeg`
   const { data, error } = await supabase.storage.from('avatars').download(path)
-
+  console.log('error',error);
+  if (!data) return null;
   const url = URL.createObjectURL(data)
   return url;
 }

@@ -4,6 +4,7 @@ import { createEventsServicePlugin } from "@schedule-x/events-service";
 import { createDragAndDropPlugin } from "@schedule-x/drag-and-drop";
 import { createResizePlugin } from "@schedule-x/resize";
 import { createCurrentTimePlugin } from "@schedule-x/current-time";
+import { createEventModalPlugin } from '@schedule-x/event-modal'
 import {
   createCalendar,
   viewDay,
@@ -12,15 +13,16 @@ import {
   viewMonthAgenda,
 } from "@schedule-x/calendar";
 import "@schedule-x/theme-default/dist/index.css";
-import { getCurrentDate } from "src/utils/getDate";
+import { getCurrentDate, toTimeRange } from "src/utils/getDate";
 
 const events = createEventsServicePlugin();
 const emit = defineEmits(["evt-click", "update"]);
 
 const { edit } = defineProps(["edit"]);
-const corePlugins = [events, createCurrentTimePlugin({ fullWeekWidth: true })]
+const corePlugins = [events, createCurrentTimePlugin({ fullWeekWidth: true }), createEventModalPlugin()]
 const editPlugins = [createDragAndDropPlugin(15), createResizePlugin(15)]
 const createPlugins = () => edit ? corePlugins.concat(editPlugins) : corePlugins
+
 
 const createCalendarStyling = () => {
   if (edit) return {};
@@ -86,13 +88,10 @@ const calendarApp = createCalendar({
   selectedDate: getCurrentDate(),
   dayBoundaries: {
     start: "06:00",
-    end: "22:00",
+    end: "23:59",
   },
   calendars: createCalendarStyling(),
   callbacks: {
-    onEventClick(evt) {
-      emit("evt-click", evt);
-    },
     onEventUpdate(evt) {
       emit("update", evt);
     },
@@ -107,8 +106,47 @@ defineExpose({ events });
 </script>
 
 <template>
-  <div style = "overflow-y: hidden;height:100vh">
-    <ScheduleXCalendar :calendar-app="calendarApp"/>
+  <div style = "height:100vh" class="q-pa-md">
+    <ScheduleXCalendar :calendar-app="calendarApp">
+      <template #eventModal="{ calendarEvent }">
+        <q-card>
+          <q-card-actions align="right" class="q-pb-none">
+            <q-btn flat class="text-primary" @click="$emit('edit', calendarEvent)" icon="edit" v-close-popup/>
+            <q-btn flat class="text-red" icon="delete" v-close-popup/>
+            <q-btn flat icon="close" v-close-popup/>
+          </q-card-actions>
+          <q-card-section class="q-pa-none q-ma-none">
+            <q-list>
+              <q-item class="q-pt-none">
+                <q-item-section avatar>
+                  <q-icon name="location_on" class="text-white"/>
+                </q-item-section>
+                <q-item-section>
+                  <div class="text-h6">{{ calendarEvent.title }}</div>
+                  <div class="text-body">{{ toTimeRange(calendarEvent.start, calendarEvent.end) }}</div>
+                </q-item-section>
+              </q-item>
+              <q-item v-if="calendarEvent.location != ''">
+                <q-item-section avatar>
+                  <q-icon name="location_on"/>
+                </q-item-section>
+                <q-item-section>
+                  {{ calendarEvent.location }}
+                </q-item-section>
+              </q-item>
+              <q-item v-if="calendarEvent.description != ''">
+                <q-item-section avatar>
+                  <q-icon name="subject"/>
+                </q-item-section>
+                <q-item-section>
+                  {{  calendarEvent.description }}
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-card-section>
+        </q-card>
+      </template>
+    </ScheduleXCalendar>
   </div>
 </template>
 

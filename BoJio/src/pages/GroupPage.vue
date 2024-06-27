@@ -10,13 +10,15 @@ const session = inject('session');
 const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
 const groups = ref(null);
+const groupTitle = ref('');
 
 const addDialog = ref(false);
 const newName = ref('');
 const splitterModel = ref(20);
 
-const loadEvents = async (index) => {
+const loadEvents = async (index,name) => {
   const resp = await getGroupEvents(index);
+  groupTitle.value = name;
   let users = []; // to generate calendar ids for each user
 
   const getColor = (user) => {
@@ -82,6 +84,25 @@ onMounted(async () => {
         <q-icon color="grey" size="30px" name="more_vert" />
       </template>
       <template v-slot:after>
+        <q-toolbar class="bg-black text-white" >
+          <q-toolbar-title> {{ groupTitle ? groupTitle : 'No Group Selected' }}</q-toolbar-title>
+          <q-btn flat round dense icon="menu">
+            <q-menu>
+              <q-list>
+                <q-item>
+                  <q-item-section>
+                    Delete
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    Manage Users
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </q-toolbar>
         <CalendarView :edit="false" ref="cal"/>
       </template>
     </q-splitter>

@@ -13,7 +13,7 @@ const props = defineProps(['groups']);
       clickable
       class = "section"
       :class="{selected:select == group.group_id}"
-      @click ="select=group.group_id;$emit('group-selected',group.group_id)">
+      @click ="select=group.group_id;$emit('group-selected',group.group_id,group.name)">
       <q-item-section class="text-h6">
         {{ group.name }}
       </q-item-section>

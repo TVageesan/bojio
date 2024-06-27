@@ -17,7 +17,9 @@ const props = defineProps(['groups']);
 
       <q-item-section avatar>
         <!-- <q-icon :name="item.icon" /> -->
-        <q-img src="https://cdn.quasar.dev/img/mountains.jpg" />
+        <q-img src="https://cdn.quasar.dev/img/mountains.jpg" 
+        class="rounded-image"
+        ratio="1"/>
       </q-item-section>
 
       <q-item-section class="text-h6">
@@ -36,3 +38,9 @@ const props = defineProps(['groups']);
     </q-item>
   </q-list>
 </template>
+
+<style scoped>
+.rounded-image {
+  border-radius: 50%;
+}
+</style>

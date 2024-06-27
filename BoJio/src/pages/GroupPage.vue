@@ -50,11 +50,12 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div>
   <q-dialog v-model="addDialog" seperator-class="sep">
     <q-card style="min-width: 400px; min-height: 100px">
       <q-card-section>
         <div class="text-h6 text-center">Create a Group</div>
-        <q-input lable="Your Group Name" v-model="newName"/>
+        <q-input label="Your Group Name" v-model="newName"/>
         <q-btn label="create" />
       </q-card-section>
       <q-separator inset/>
@@ -72,7 +73,13 @@ onMounted(async () => {
       :limits="[10, 40]"
     >
       <template v-slot:before>
-        <q-input v-model="search" placeholder="Search groups" />
+        <div class="q-pa-sm">
+        <q-input rounded outlined v-model="search" placeholder="Search">
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </div>
         <GroupList :groups="groups" @group-selected="loadEvents" @group-add="addDialog = true"/>
       </template>
       <template v-slot:separator>
@@ -83,4 +90,5 @@ onMounted(async () => {
       </template>
     </q-splitter>
   </q-page>
+</div>
 </template>

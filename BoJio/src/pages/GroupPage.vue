@@ -10,6 +10,7 @@ const session = inject('session');
 const cal = ref(null);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
 const groups = ref(null);
+const search = ref('');
 
 const addDialog = ref(false);
 const newName = ref('');
@@ -42,6 +43,13 @@ const loadEvents = async (index) => {
 
   events.value.set(evts);
 }
+
+const filteredGroups = computed(() => {
+  if (!search.value) {
+    return groups.value;
+  }
+  return groups.value.filter(group => group.name.toLowerCase().includes(search.value.toLowerCase()));
+});
 
 onMounted(async () => {
   const resp = await getGroups(session);
@@ -80,7 +88,7 @@ onMounted(async () => {
           </template>
         </q-input>
       </div>
-        <GroupList :groups="groups" @group-selected="loadEvents" @group-add="addDialog = true"/>
+      <GroupList :groups="filteredGroups" @group-selected="loadEvents" @group-add="addDialog = true"/>
       </template>
       <template v-slot:separator>
         <q-icon color="grey" size="30px" name="more_vert" />

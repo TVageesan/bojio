@@ -57,7 +57,10 @@ const onSignIn = async (email, password) => {
 onMounted(() => {
   supabase.auth.getSession().then(({ data }) => {
     session.value = data.session;
-    console.log('my user id is',session.value.user.id)
+    $q.loading.show({ message: 'Loading your data. Hang on...'})
+    setTimeout(() => {
+      $q.loading.hide()
+    }, 1000)
   });
 
   supabase.auth.onAuthStateChange((_, _session) => {

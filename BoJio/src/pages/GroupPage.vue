@@ -58,7 +58,11 @@ onMounted(async () => {
         <q-input lable="Your Group Name" v-model="newName"/>
         <q-btn label="create" />
       </q-card-section>
-      <q-separator inset/>
+      <div class="row fit no-wrap items-center">
+        <q-separator class="col"/>
+        <div class="col-grow q-mx-sm text-h6">OR</div>
+        <q-separator class="col"/>
+      </div>
       <q-card-section>
         <div class="text-h6 text-center">Join an existing one</div>
       </q-card-section>

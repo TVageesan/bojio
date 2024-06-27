@@ -26,6 +26,12 @@ const evtToFetch = (evt) => ({
 
 const getUser = (session) => session.value.user.id;
 
+export const logoutUser = () => supabase.auth.signOut();
+
+export const getUsername = (session) => supabase.from("users").select().eq("id",getUser(session));
+
+export const putUsername = (session,name) => supabase.from("users").update({name}).eq("id",getUser(session)).select();
+
 export const getEvents = async (session) => {
   const { data } = await supabase.from("events").select().eq("user_id", getUser(session));
   return data.map(e => evtToFetch(e));
@@ -55,9 +61,10 @@ export const uploadImage = async (session, file) => {
 
 export const downloadImage = async (session) => {
   const path = `${getUser(session)}/profile.jpeg`
-  const { data, error } = await supabase.storage.from('avatars').download(path)
-  console.log('error',error);
-  if (!data) return null;
+  let { data, error } = await supabase.storage.from('avatars').download(path)
+  if (!data){
+    data =  (await supabase.storage.from('avatars').download('public/placeholder.jpeg')).data;
+  };
   const url = URL.createObjectURL(data)
   return url;
 }

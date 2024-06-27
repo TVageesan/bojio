@@ -19,18 +19,6 @@ const menuList = [
     label: "Groups",
     tooltip: "View your friend groups",
     route: '/group',
-  },
-  {
-    icon: "search",
-    label: "Browse",
-    tooltip: "Search for activities",
-    route: '/',
-  },
-  {
-    icon: "event",
-    label: "Events",
-    tooltip: "Explore events near you",
-    route: '/',
   }
 ];
 </script>
@@ -87,33 +75,14 @@ const menuList = [
             </q-tooltip>
           </q-item>
         </q-list>
-
-        <q-item
-          clickable
-          v-ripple
-          @click="profileDialog = true"
-        >
-          <q-item-section avatar>
-            <q-icon name="person" />
-          </q-item-section>
-          <q-item-section>
-            Profile
-          </q-item-section>
-          <q-tooltip
-            anchor="center left"
-            self="center right"
-            style="white-space: nowrap"
-          >
-            View your profile
-          </q-tooltip>
-        </q-item>
+        <ProfileDialog />
       </q-drawer>
 
       <q-page-container>
         <router-view></router-view>
       </q-page-container>
 
-      <ProfileDialog v-model="profileDialog" />
+
     </q-layout>
   </div>
 </template>

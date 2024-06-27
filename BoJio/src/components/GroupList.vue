@@ -6,13 +6,13 @@ const props = defineProps(['groups']);
 </script>
 
 <template>
-  <q-list v-if="!isCollapsed" dense>
+  <q-list v-if="!isCollapsed" >
     <q-item
       v-for="group in groups"
       :key="group.group_id"
       clickable
       class = "section"
-      :class="{selected:select == group.group_id}"
+      :class="{'selected-rounded':select == group.group_id}"
       @click ="select=group.group_id;$emit('group-selected',group.group_id)">
 
       <q-item-section avatar>
@@ -42,5 +42,17 @@ const props = defineProps(['groups']);
 <style scoped>
 .rounded-image {
   border-radius: 50%;
+}
+
+.q-item:hover:not(.selected-rounded){
+  background-color: grey-3;
+  color: black;
+  border-radius: 10px;
+}
+
+.selected-rounded{
+  background-color: black;
+  color: white;
+  border-radius: 10px;
 }
 </style>

@@ -85,6 +85,7 @@ const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
 </script>
 
 <template>
+  <div>
   <q-dialog v-model="addDialog">
     <q-card style="min-width: 400px; min-height: 100px">
       <q-card-section>
@@ -168,6 +169,7 @@ const handleUpdateEvent = (evt) => { //triggers on drag/drop or resize
       @update = "handleUpdateEvent"
     />
   </q-page>
+</div>
 </template>
 
 <style>

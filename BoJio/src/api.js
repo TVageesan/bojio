@@ -60,6 +60,7 @@ export const uploadImage = async (session, file) => {
 }
 
 export const downloadImage = async (session) => {
+  if (!session) return null;
   const path = `${getUser(session)}/profile.jpeg`
   let { data, error } = await supabase.storage.from('avatars').download(path)
   if (!data){

@@ -1,12 +1,10 @@
 <script setup>
-import { ref, provide } from 'vue';
+import { ref } from 'vue';
 import ProfileDialog from 'src/components/ProfileDialog.vue';
 
 const drawer = ref(false);
 const miniState = ref(true);
-const profileDialog = ref(false);
-const profileText = ref('');
-provide('pText',profileText);
+
 const menuList = [
   {
     icon: "calendar_today",
@@ -81,8 +79,12 @@ const menuList = [
       <q-page-container>
         <router-view></router-view>
       </q-page-container>
-
-
     </q-layout>
   </div>
 </template>
+<style>
+.selected{
+  color: white;
+  background-color: black;
+}
+</style>

@@ -1,8 +1,9 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, watch } from 'vue';
 import { uploadImage, downloadImage, getUsername, putUsername, logoutUser } from 'src/api.js';
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+
 
 const router = useRouter();
 const open = ref(false);
@@ -38,11 +39,14 @@ const save = async () => {
   console.log('result',result);
 }
 
-onMounted(async () => {
+const loadData = async () => {
   url.value = await downloadImage(session);
   const name = (await getUsername(session)).data[0]?.name;
   if (name) text.value = name;
-})
+}
+
+watch(session,() => loadData());
+onMounted(loadData);
 </script>
 
 <template>

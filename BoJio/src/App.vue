@@ -51,16 +51,16 @@ const onSignIn = async (email, password) => {
     email,
     password,
   });
+  $q.loading.show({ message: 'Loading your data. Hang on...'})
+    setTimeout(() => {
+      $q.loading.hide()
+    }, 3000)
   if (error) showNotify(error.message);
 };
 
 onMounted(() => {
   supabase.auth.getSession().then(({ data }) => {
     session.value = data.session;
-    $q.loading.show({ message: 'Loading your data. Hang on...'})
-    setTimeout(() => {
-      $q.loading.hide()
-    }, 1000)
   });
 
   supabase.auth.onAuthStateChange((_, _session) => {

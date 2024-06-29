@@ -3,6 +3,7 @@ import { ref, onMounted, computed, provide, watch } from "vue";
 import { supabase } from "./utils/supabaseClient";
 import LoginScreen from "./components/LoginScreen.vue";
 import { useQuasar } from "quasar";
+import { createUser } from "./api";
 const $q = useQuasar()
 const showNotify = (message) => {
   $q.notify({ message, color:'red' })
@@ -36,7 +37,14 @@ const onSignUp = async (email, password,confirm) => {
     password,
   });
   if (error) showNotify(error.message);
-};
+  else {
+    await createUser(session);
+    $q.loading.show({ message: 'Loading your data. Hang on...'})
+    setTimeout(() => {
+      $q.loading.hide()
+    }, 2000)
+  }
+  };
 
 const onSignIn = async (email, password) => {
   if (email == ''){
@@ -51,11 +59,13 @@ const onSignIn = async (email, password) => {
     email,
     password,
   });
-  $q.loading.show({ message: 'Loading your data. Hang on...'})
+
+  if (error) showNotify(error.message);
+  else {$q.loading.show({ message: 'Loading your data. Hang on...'})
     setTimeout(() => {
       $q.loading.hide()
-    }, 3000)
-  if (error) showNotify(error.message);
+    }, 2000)
+  }
 };
 
 onMounted(() => {

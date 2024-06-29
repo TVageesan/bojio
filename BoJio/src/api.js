@@ -28,6 +28,8 @@ const evtToFetch = (evt) => ({
 
 const getUser = (session) => session.value.user.id;
 
+export const createUser = (session) => supabase.from("users").insert({id: getUser(session), name: 'New User'});
+
 export const logoutUser = () => supabase.auth.signOut();
 
 export const getUsername = (session) => supabase.from("users").select().eq("id",getUser(session));
@@ -44,6 +46,7 @@ export const deleteEvent = (session,evt_id) => supabase.from('events').delete().
 export const postEvent = (session, evt) => supabase.from("events").insert(evtToPost(session,evt)).select();
 
 export const overwriteEvents = (session) => supabase.from("events").delete().match({ imported: true, user_id: getUser(session)});
+
 export const importEvents = (session,evts) => supabase.from("events").insert(evts.map(evt => ({...evtToPost(session,evt),imported: true}))).select();
 
 export const putEvent = (session,evt) => supabase.from("events").update(evtToPost(session,evt)).match({evt_id: evt.id, user_id: getUser(session)}).select();
@@ -52,16 +55,30 @@ export const getGroups = (session) => supabase.rpc('fetch_groups',{ input_id: ge
 
 export const getGroupEvents = (input_id) => supabase.rpc('fetch_group_events', { input_id });
 
-export const postGroup = (session, name, url) => supabase.from("groups").insert({ name, owner_id: getUser(session), url });
-
+export const postGroup = async (session, name) => {
+  const resp = await supabase.from("groups").insert({ name, owner_id: getUser(session), url: '' }).select();
+  const created_id = resp.data[0].id;
+  await supabase.from("user_groups").insert({user_id: getUser(session), group_id : created_id });
+}
 export const putGroup = (name,url,group_id) => supabase.from("groups").update({ name, url }).eq("id",group_id);
 
 export const deleteGroup = (group_id) => supabase.from("groups").delete().eq("id",group_id);
 
+export const getGroupReferral = (group_id) => supabase.from("groups").select().eq('id',group_id);
+
+export const joinGroup = async (session,group_invite) => {
+  const group  = await supabase.from("groups").select().eq("invite",group_invite);
+  if (group && group.data){
+    const { id } = group.data[0];
+    await supabase.from("user_groups").insert({ user_id: getUser(session), group_id: id});
+  }
+}
+
 export const uploadImage = async (session, file) => {
   const fileExt = file.name.split('.').pop();
   const filePath = `${getUser(session)}/profile.jpeg`
-  await supabase.storage.from('avatars').update(filePath, file,{upsert:true})
+  const resp = await supabase.storage.from('avatars').upload(filePath, file,{upsert:true})
+  console.log('uploadImage resp',resp);
 }
 
 export const downloadImage = async (session) => {
@@ -154,7 +171,6 @@ export const getModules = async (index,url) => {
   const year = new Date().getFullYear();
   const acad_year = getAcademicYear(year);
   const semStart = getAcademicStartDate( year, semester );
-  console.log('semester',semester,'semStart',semStart);
   const new_events = [];
   const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 

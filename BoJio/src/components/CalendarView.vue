@@ -72,7 +72,7 @@ const createCalendarStyling = () => {
       lightColors: {
         main: mainColor,
         container: containerColor,
-        onContainer: isDark(containerColor) ? '#FFFFFF' : '#000000'
+        onContainer: isDark(mainColor) ? '#FFFFFF' : '#000000'
       },
     };
   };
@@ -102,6 +102,8 @@ const calendarApp = createCalendar({
   plugins: createPlugins(),
 });
 
+const valid = (attribute) => attribute && attribute != ''
+
 defineExpose({ events });
 </script>
 
@@ -112,13 +114,13 @@ defineExpose({ events });
         <q-card>
           <q-card-actions align="right" class="q-pb-none">
             <q-btn flat class="text-primary" @click="$emit('edit', calendarEvent)" icon="edit" v-close-popup/>
-            <q-btn flat class="text-red" icon="delete" v-close-popup/>
+            <q-btn flat class="text-red" icon="delete" @click="$emit('delete',calendarEvent.id)" v-close-popup/>
             <q-btn flat icon="close" v-close-popup/>
           </q-card-actions>
           <q-card-section class="q-pa-none q-ma-none">
             <q-list>
               <q-item class="q-pt-none">
-                <q-item-section avatar>
+                <q-item-section avatar v-if="valid(calendarEvent.location) || Array.isArray(calendarEvent.people) || valid(calendarEvent.description)">
                   <q-icon name="location_on" class="text-white"/>
                 </q-item-section>
                 <q-item-section>
@@ -126,7 +128,7 @@ defineExpose({ events });
                   <div class="text-body">{{ toTimeRange(calendarEvent.start, calendarEvent.end) }}</div>
                 </q-item-section>
               </q-item>
-              <q-item v-if="calendarEvent.location != ''">
+              <q-item v-if="valid(calendarEvent.location)">
                 <q-item-section avatar>
                   <q-icon name="location_on"/>
                 </q-item-section>
@@ -134,7 +136,15 @@ defineExpose({ events });
                   {{ calendarEvent.location }}
                 </q-item-section>
               </q-item>
-              <q-item v-if="calendarEvent.description != ''">
+              <q-item v-if = "Array.isArray(calendarEvent.people)">
+                <q-item-section avatar>
+                  <q-icon name="person"/>
+                </q-item-section>
+                <q-item-section>
+                  {{ calendarEvent.people[0] }}
+                </q-item-section>
+              </q-item>
+              <q-item v-if="valid(calendarEvent.description)">
                 <q-item-section avatar>
                   <q-icon name="subject"/>
                 </q-item-section>

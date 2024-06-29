@@ -14,17 +14,12 @@ const url = ref(null);
 
 const upload = async () => {
   if (!uploading.value) {
-    console.log('no file to upload');
     return;
   }
-  if (url.value == '') {
-    console.log('uploading', uploading.value);
-    uploadImage(session, uploading.value);
-  } else {
-    console.log('url check failed', url.value);
-    uploadImage(session, uploading.value);
-  }
+
+  await uploadImage(session, uploading.value);
   url.value = URL.createObjectURL(uploading.value);
+  console.log()
   uploading.value = null;
 }
 
@@ -34,9 +29,7 @@ const logout = async () => {
 }
 
 const save = async () => {
-  console.log('sending,',text.value);
   const result = await putUsername(session,text.value);
-  console.log('result',result);
 }
 
 const loadData = async () => {

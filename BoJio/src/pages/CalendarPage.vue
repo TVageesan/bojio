@@ -30,21 +30,20 @@ const max_index = (arr) => {
 };
 
 const importNUSMods = async (url) => {
+  imported.value = true;
   const { new_events, new_index } = await getModules(index.value, url);
   index.value = new_index;
-  const curr_events = events.value.getAll()
+  let curr_events = events.value.getAll()
 
   if (imported.value) {
-    overwriteEvents(session);
+    await overwriteEvents(session);
     curr_events = curr_events.filter(({imported}) => imported == false);
   }
-  importEvents(session,new_events);
+  await importEvents(session,new_events);
   events.value.set(curr_events.concat(new_events));
-  imported.value = true;
 };
 
 const handleImport = (url) => {
-  console.log('url',url);
   importNUSMods(url);
   openDialog.value = false;
 }
@@ -92,12 +91,10 @@ const newEvent = () => {
 const editEventUpdate = () => {
   const evt = currEvent.value;
   events.value.update(evt);
-  console.log('new evt',evt);
-  putEvent(session, evt).then(resp => console.log('put resp',resp));
+  putEvent(session, evt);
 };
 
-const editEventDelete = () => {
-  const id = currEvent.value.id;
+const editEventDelete = (id = currEvent.value.id) => {
   events.value.remove(id);
   deleteEvent(session, id);
 };
@@ -106,7 +103,7 @@ const addEvent = () => {
   const evt = { ...currEvent.value, id: ++index.value };
   if (evt.title == '') evt.title = 'New Event';
   events.value.add(evt);
-  postEvent(session, evt).then(resp => console.log('post resp',resp));
+  postEvent(session, evt);
 };
 
 const handleUpdateEvent = (evt) => {
@@ -136,6 +133,7 @@ const handleUpdateEvent = (evt) => {
       ref="cal"
       @edit="editDialogTrigger"
       @update="handleUpdateEvent"
+      @delete="editEventDelete"
     />
   </q-page>
 </template>

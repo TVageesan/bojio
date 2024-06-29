@@ -8,11 +8,8 @@ export const toTimePlusHour = (date) => toTime(addToDate(date,{hours: 1}));
 export const getCurrentDate = () => toTime(new Date());
 export const toTimeRange = (start_time,end_time) => {
   {
-    console.log(start_time,end_time);
     const start = new Date(start_time);
     const end = new Date(end_time);
-
-    console.log('start',start,'end',end);
 
     const dayOfWeek = formatDate(start, 'dddd'); // Full name of the day
     const monthName = formatDate(start, 'MMMM'); // Full name of the month

@@ -71,6 +71,7 @@ const onSignIn = async (email, password) => {
 onMounted(() => {
   supabase.auth.getSession().then(({ data }) => {
     session.value = data.session;
+    console.log('my user id is',session.value.user.id)
   });
 
   supabase.auth.onAuthStateChange((_, _session) => {

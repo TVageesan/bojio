@@ -6,22 +6,28 @@ const props = defineProps(['groups']);
 </script>
 
 <template>
-  <q-list v-if="!isCollapsed" dense>
+  <q-list v-if="!isCollapsed" >
     <q-item
       v-for="group in groups"
       :key="group.group_id"
       clickable
       class = "section"
-      :class="{selected:select == group.group_id}"
-      @click ="select=group.group_id;$emit('group-selected',group.group_id,group.name)">
+      :class="{'selected-rounded':select == group.group_id}"
+      @click ="select=group.group_id;$emit('group-selected',group.group_id)">
+
+      <q-item-section avatar>
+        <!-- <q-icon :name="item.icon" /> -->
+        <q-img src="https://cdn.quasar.dev/img/mountains.jpg"
+        class="rounded-image"
+        ratio="1"/>
+      </q-item-section>
+
       <q-item-section class="text-h6">
         {{ group.name }}
       </q-item-section>
-      <q-item-section avatar>
-        <!-- <q-icon :name="item.icon" /> -->
-        AVATAR
-      </q-item-section>
+
     </q-item>
+
     <q-item class="row q-pb-md q-mb-md">
       <q-btn
         class = "bg-green text-white col-grow q-ma-xs"
@@ -32,3 +38,21 @@ const props = defineProps(['groups']);
     </q-item>
   </q-list>
 </template>
+
+<style scoped>
+.rounded-image {
+  border-radius: 50%;
+}
+
+.q-item:hover:not(.selected-rounded){
+  background-color: grey-3;
+  color: black;
+  border-radius: 10px;
+}
+
+.selected-rounded{
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+}
+</style>

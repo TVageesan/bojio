@@ -136,7 +136,9 @@ const handleUpdateEvent = (evt) => {
       @delete="editEventDelete"
     />
   </q-page>
+</div>
 </template>
+
 <style>
 .float {
   position: fixed;

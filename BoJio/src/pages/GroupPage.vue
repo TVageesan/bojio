@@ -166,5 +166,4 @@ onMounted(async () => {
       </template>
     </q-splitter>
   </q-page>
-</div>
 </template>

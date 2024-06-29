@@ -128,15 +128,15 @@ const handleUpdateEvent = (evt) => {
     <q-btn class="float" icon="add" @click="addDialogTrigger" size="lg">
       Add Event
     </q-btn>
-      <CalendarView
+    <CalendarView
       :edit="true"
       ref="cal"
       @edit="editDialogTrigger"
       @update="handleUpdateEvent"
       @delete="editEventDelete"
-    />
+    >
+    </CalendarView>
   </q-page>
-</div>
 </template>
 
 <style>

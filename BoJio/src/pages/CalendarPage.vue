@@ -134,8 +134,7 @@ const handleUpdateEvent = (evt) => {
       @edit="editDialogTrigger"
       @update="handleUpdateEvent"
       @delete="editEventDelete"
-    >
-    </CalendarView>
+    />
   </q-page>
 </template>
 

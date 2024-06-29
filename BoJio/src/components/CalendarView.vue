@@ -112,12 +112,12 @@ defineExpose({ events });
     <ScheduleXCalendar :calendar-app="calendarApp">
       <template #eventModal="{ calendarEvent }">
         <q-card>
-          <q-card-actions align="right" class="q-pb-none">
+          <q-card-actions align="right" class="q-pb-none" v-if="edit">
             <q-btn flat class="text-primary" @click="$emit('edit', calendarEvent)" icon="edit" v-close-popup/>
             <q-btn flat class="text-red" icon="delete" @click="$emit('delete',calendarEvent.id)" v-close-popup/>
             <q-btn flat icon="close" v-close-popup/>
           </q-card-actions>
-          <q-card-section class="q-pa-none q-ma-none">
+          <q-card-section class="q-pa-none q-ma-none q-pt-sm">
             <q-list>
               <q-item class="q-pt-none">
                 <q-item-section avatar v-if="valid(calendarEvent.location) || Array.isArray(calendarEvent.people) || valid(calendarEvent.description)">

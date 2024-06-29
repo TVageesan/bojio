@@ -8,12 +8,12 @@ const props = defineProps(['groups']);
 <template>
   <q-list v-if="!isCollapsed" >
     <q-item
-      v-for="group in groups"
-      :key="group.group_id"
+      v-for="(group,index) in groups"
+      :key="index"
       clickable
       class = "section"
-      :class="{'selected-rounded':select == group.group_id}"
-      @click ="select=group.group_id;$emit('group-selected',group.group_id)">
+      :class="{'selected-rounded':select == index}"
+      @click ="select=index;$emit('group-selected',index,group.name)">
 
       <q-item-section avatar>
         <!-- <q-icon :name="item.icon" /> -->

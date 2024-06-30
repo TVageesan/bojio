@@ -104,8 +104,7 @@ const addEvent = async () => {
   const evt = { ...currEvent.value, id: ++index.value };
   if (evt.title == '') evt.title = 'New Event';
   events.value.add(evt);
-  const resp = await postEvent(session, evt);
-  console.log('post resp',resp);
+  await postEvent(session, evt);
 };
 
 const handleUpdateEvent = (evt) => {

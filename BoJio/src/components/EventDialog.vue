@@ -143,7 +143,7 @@ const send = (url) => {
         unelevated
         label="Create"
         class="bg-primary text-white"
-        @click="console.log('add button pressed!');$emit('add')"
+        @click="$emit('add')"
         v-close-popup
       />
     </q-card-actions>

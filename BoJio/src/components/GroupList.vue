@@ -3,12 +3,20 @@ import { ref } from 'vue';
 const select = ref(-1);
 const isCollapsed = ref(false);
 const props = defineProps(['groups']);
+const search = ref('');
+
+const filteredGroups = computed(() => {
+  if (!search.value) {
+    return groups.value;
+  }
+  return groups.value.filter(group => group.name.toLowerCase().includes(search.value.toLowerCase()));
+});
 </script>
 
 <template>
   <q-list v-if="!isCollapsed" >
     <q-item
-      v-for="(group,index) in groups"
+      v-for="(group,index) in filteredGroups"
       :key="index"
       clickable
       class = "section"

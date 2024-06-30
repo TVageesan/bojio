@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 const select = ref(-1);
 const isCollapsed = ref(false);
 const props = defineProps(['groups']);
+const emit = defineEmits(['groupSelected','groupAdd'])
 const search = ref('');
 
 const filteredGroups = computed(() => {
@@ -14,6 +15,11 @@ const filteredGroups = computed(() => {
 </script>
 
 <template>
+  <q-input rounded outlined v-model="search" placeholder="Search">
+    <template v-slot:prepend>
+        <q-icon name="search" />
+    </template>
+  </q-input>
   <q-list v-if="!isCollapsed" >
     <q-item
       v-for="(group,index) in filteredGroups"

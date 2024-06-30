@@ -134,13 +134,6 @@ onMounted(async () => {
       :limits="[10, 40]"
     >
       <template v-slot:before>
-        <div class="q-pa-sm">
-        <q-input rounded outlined v-model="search" placeholder="Search">
-          <template v-slot:prepend>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </div>
         <GroupList :groups="groups" @group-selected="loadEvents" @group-add="addDialog = true"/>
       </template>
       <template v-slot:separator>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 const select = ref(-1);
 const isCollapsed = ref(false);
 const props = defineProps(['groups']);

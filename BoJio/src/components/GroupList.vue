@@ -7,9 +7,9 @@ const search = ref('');
 
 const filteredGroups = computed(() => {
   if (!search.value) {
-    return props.groups.value;
+    return props.groups;
   }
-  return props.groups.value.filter(group => group.name.toLowerCase().includes(search.value.toLowerCase()));
+  return props.groups.filter(group => group.name.toLowerCase().includes(search.value.toLowerCase()));
 });
 </script>
 

@@ -100,16 +100,15 @@ const editEventDelete = (id = currEvent.value.id) => {
 };
 
 const addEvent = async () => {
-  console.log('add Event fired');
   const evt = { ...currEvent.value, id: ++index.value };
   if (evt.title == '') evt.title = 'New Event';
   events.value.add(evt);
-  await postEvent(session, evt);
+  const resp = await postEvent(session, evt);
 };
 
-const handleUpdateEvent = (evt) => {
+const handleUpdateEvent = async (evt) => {
   //triggers on drag/drop or resize
-  putEvent(session, evt);
+  const resp = await putEvent(session, evt);
 };
 </script>
 

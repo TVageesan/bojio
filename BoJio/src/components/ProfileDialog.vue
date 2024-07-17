@@ -36,17 +36,24 @@ const logout = async () => {
 
 const save = async () => {
   console.log('sending,', text.value, email.value, password.value);
-  const result = await putUsername(session, { name: text.value, email: email.value, password: password.value });
-  console.log('result', result);
+  const nameResult = await putUsername(session, text.value);
+  const emailResult = await putEmail(session, email.value);
+  const passwordResult = await putPassword(session, password.value);
+  console.log('nameResult', nameResult);
+  console.log('emailResult', emailResult);
+  console.log('passwordResult', passwordResult);
 }
 
 onMounted(async () => {
   url.value = await downloadImage(session);
   const user = (await getUsername(session)).data[0];
-  if (user) {
-    text.value = user.name;
-    email.value = user.email;
-  }
+  if (user) text.value = user.name;
+
+  const userEmail = (await getEmail(session)).data[0];
+  if (userEmail) email.value = userEmail.email;
+
+  const userPassword = (await getPassword(session)).data[0];
+  if (userPassword) password.value = userPassword.password;
 })
 </script>
 

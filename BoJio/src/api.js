@@ -32,9 +32,16 @@ export const getUsername = (session) => supabase.from("users").select().eq("id",
 
 export const putUsername = (session,name) => supabase.from("users").update({name}).eq("id",getUser(session)).select();
 
-export const getEmail = (session) => supabase.from("users").select("email").eq("id", getUser(session));
+export const getEmail = async (session) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  return user.email;
+};
 
-export const putEmail = (session, email) => supabase.from("users").update({ email }).eq("id", getUser(session)).select("email");
+export const putEmail = async (email) => {
+  await supabase.auth.updateUser({
+    email: email
+  });
+};
 
 export const getPassword = (session) => supabase.from("users").select("password").eq("id", getUser(session));
 

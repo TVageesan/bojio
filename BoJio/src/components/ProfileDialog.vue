@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject } from 'vue';
-import { uploadImage, downloadImage, getUsername, putUsername, logoutUser, getEmail, putEmail, getPassword, putPassword } from 'src/api.js';
+import { uploadImage, downloadImage, getUsername, putUsername, logoutUser, getEmail } from 'src/api.js';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -10,8 +10,8 @@ const uploading = ref(null);
 const session = inject('session');
 const text = ref('New user');
 const url = ref(null);
-const email = ref('');
-const password = ref('');
+const email = ref('Email');
+const password = ref('Password');
 
 const upload = async () => {
   if (!uploading.value) {
@@ -46,17 +46,12 @@ const save = async () => {
 
 onMounted(async () => {
   url.value = await downloadImage(session);
+
   const user = (await getUsername(session)).data[0];
   if (user) text.value = user.name;
 
-  const userEmailData = await getEmail(session);
-        if (userEmailData.data && userEmailData.data.length > 0) {
-          email.value = userEmailData.data[0].email;
-        }
-
-  const userPassword = (await getPassword(session)).data[0];
-  if (userPassword) password.value = userPassword.password;
-})
+  email.value = await getEmail(session);
+});
 </script>
 
 <template>

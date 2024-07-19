@@ -36,6 +36,12 @@ export const getEmail = async (session) => {
   const { data: { user } } = await supabase.auth.getUser();
   return user.email;
 }
+
+export const putEmail = async(session, newEmail) => {
+  const { data, error } = await supabase.auth.updateUser({
+    email: 'newEmail'
+  })
+}
 //TODO password
 
 

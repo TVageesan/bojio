@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject } from 'vue';
-import { uploadImage, downloadImage, getUsername, putUsername, logoutUser, getEmail } from 'src/api.js';
+import { uploadImage, downloadImage, getUsername, putUsername, logoutUser, getEmail, putEmail } from 'src/api.js';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 

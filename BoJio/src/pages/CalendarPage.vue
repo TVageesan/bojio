@@ -88,27 +88,30 @@ const newEvent = () => {
 };
 
 //EVENTS CRUD
-const editEventUpdate = () => {
+const editEventUpdate = async () => {
   const evt = currEvent.value;
   events.value.update(evt);
-  putEvent(session, evt);
+  const result = await putEvent(session, evt);
+  //console.log('updatEvent',result);
 };
 
-const editEventDelete = (id = currEvent.value.id) => {
+const editEventDelete = async (id = currEvent.value.id) => {
   events.value.remove(id);
-  deleteEvent(session, id);
+  const result = await deleteEvent(session, id);
+  //console.log('deleteEvent',result);
 };
 
-const addEvent = () => {
+const addEvent = async () => {
   const evt = { ...currEvent.value, id: ++index.value };
   if (evt.title == '') evt.title = 'New Event';
   events.value.add(evt);
-  postEvent(session, evt);
+  const result = await postEvent(session, evt);
+  //console.log('addEvent',result);
 };
 
-const handleUpdateEvent = (evt) => {
-  //triggers on drag/drop or resize
-  putEvent(session, evt);
+const handleUpdateEvent = async (evt) => {
+  const result = await putEvent(session, evt);
+  //console.log('updateEvent',result);
 };
 </script>
 

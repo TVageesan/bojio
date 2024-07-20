@@ -97,6 +97,7 @@ onMounted(loadData);
           </div>
 
         </q-card-section>
+
         <q-card-actions align="right">
           <q-btn size="md" unelevated label="Save" color="green" class="q-pr-sm" @click="save" v-close-popup />
           <q-btn size="md" unelevated label="Logout" color="black" @click="logout" v-close-popup />

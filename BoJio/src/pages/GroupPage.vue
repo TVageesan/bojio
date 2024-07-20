@@ -88,7 +88,6 @@ onMounted(async () => {
   const resp = await getGroups(session);
   groups.value = resp.data;
 });
-
 </script>
 
 <template>
@@ -126,6 +125,7 @@ onMounted(async () => {
       </q-card-section>
     </q-card>
   </q-dialog>
+
   <q-page>
     <q-splitter
       v-model="splitterModel"

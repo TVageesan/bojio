@@ -131,7 +131,7 @@ const handleUpdateEvent = async (evt) => {
     <q-btn class="float" icon="add" @click="addDialogTrigger" size="lg">
       Add Event
     </q-btn>
-      <CalendarView
+    <CalendarView
       :edit="true"
       ref="cal"
       @edit="editDialogTrigger"
@@ -140,6 +140,7 @@ const handleUpdateEvent = async (evt) => {
     />
   </q-page>
 </template>
+
 <style>
 .float {
   position: fixed;

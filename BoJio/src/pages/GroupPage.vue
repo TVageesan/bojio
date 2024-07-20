@@ -50,7 +50,6 @@ const getColor = async (id,name) => {
 
 const getCalendarColor = (id) => {
   const color = colors.value[id];
-  console.log('ccc',color);
   if (!color) return 'red';
   return color.lightColors.main;
 }
@@ -65,6 +64,7 @@ const loadEvents = async (index) => {
 
   const promises = evtData.map(async (evt) => ({
       id: evt.user_id + evt.evt_id,
+      user_id: evt.user_id,
       start: evt.start_time,
       end: evt.end_time,
       title: evt.title,
@@ -76,7 +76,6 @@ const loadEvents = async (index) => {
   );
 
   events.value.set(await Promise.all(promises));
-  console.log("created users", users.value, user_details.value);
 };
 
 const reloadGroups = async () => {
@@ -232,7 +231,7 @@ onMounted(async () => {
             </q-menu>
           </q-btn>
         </q-toolbar>
-        <CalendarView v-if="group" :edit="false" ref="cal" />
+        <CalendarView v-if="group" :edit="false" :profiles="user_details" ref="cal" />
         <div v-else class="empty-state">
           <h2>Select A Group To Get Started</h2>
         </div>

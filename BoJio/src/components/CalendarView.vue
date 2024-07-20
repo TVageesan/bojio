@@ -18,7 +18,7 @@ import { getCurrentDate, toTimeRange } from "src/utils/getDate";
 const events = createEventsServicePlugin();
 const emit = defineEmits(["evt-click", "update"]);
 
-const { edit } = defineProps(["edit"]);
+const { edit, profiles } = defineProps(["edit","profiles"]);
 const corePlugins = [events, createCurrentTimePlugin({ fullWeekWidth: true }), createEventModalPlugin()]
 const editPlugins = [createDragAndDropPlugin(15), createResizePlugin(15)]
 const createPlugins = () => edit ? corePlugins.concat(editPlugins) : corePlugins
@@ -140,7 +140,7 @@ defineExpose({ events, calendars });
               </q-item>
               <q-item v-if = "Array.isArray(calendarEvent.people)">
                 <q-item-section avatar>
-                  <q-icon name="person"/>
+                  <q-img :src="profiles[calendarEvent.user_id].url " />
                 </q-item-section>
                 <q-item-section>
                   {{ calendarEvent.people[0] }}

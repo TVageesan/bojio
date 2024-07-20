@@ -8,13 +8,13 @@ import {
   deleteEvent,
   getModules,
   overwriteEvents,
-  importEvents
+  importEvents,
 } from "src/api";
 import { watch, ref, computed, inject } from "vue";
 import { toTime, toTimePlusHour } from "src/utils/getDate";
 
-
 const session = inject("session");
+const loading = inject("loading");
 const cal = ref(null);
 const index = ref(0);
 const events = computed(() => cal.value?.events); //ref to events plugin of schedule-x
@@ -33,30 +33,20 @@ const importNUSMods = async (url) => {
   imported.value = true;
   const { new_events, new_index } = await getModules(index.value, url);
   index.value = new_index;
-  let curr_events = events.value.getAll()
+  let curr_events = events.value.getAll();
 
   if (imported.value) {
     await overwriteEvents(session);
-    curr_events = curr_events.filter(({imported}) => imported == false);
+    curr_events = curr_events.filter(({ imported }) => imported == false);
   }
-  await importEvents(session,new_events);
+  await importEvents(session, new_events);
   events.value.set(curr_events.concat(new_events));
 };
 
 const handleImport = (url) => {
   importNUSMods(url);
   openDialog.value = false;
-}
-
-const loadEvents = async () => {
-  if (!events.value || !session.value) return;
-  const evts = await getEvents(session);
-  index.value = max_index(evts);
-  events.value.set(evts);
-  //importNUSMods(test); //for testing
 };
-
-watch([cal, session], loadEvents);
 
 //DIALOG
 const openDialog = ref(false); //flag to trigger dialog open
@@ -78,41 +68,53 @@ const editDialogTrigger = (evt) => {
 
 const newEvent = () => {
   const current = new Date();
-  return({
+  return {
     title: "",
     start: toTime(current),
     end: toTimePlusHour(current),
     location: "",
     description: "",
-  })
+  };
 };
 
 //EVENTS CRUD
 const editEventUpdate = async () => {
   const evt = currEvent.value;
   events.value.update(evt);
-  const result = await putEvent(session, evt);
-  //console.log('updatEvent',result);
+  const { error } = await putEvent(session, evt);
+  if (error) console.log("updateEvent", error);
 };
 
 const editEventDelete = async (id = currEvent.value.id) => {
   events.value.remove(id);
-  const result = await deleteEvent(session, id);
-  //console.log('deleteEvent',result);
+  const { error } = await deleteEvent(session, id);
+  if (error) console.log("deleteEvent", error);
 };
 
 const addEvent = async () => {
   const evt = { ...currEvent.value, id: ++index.value };
-  if (evt.title == '') evt.title = 'New Event';
+  if (evt.title == "") evt.title = "New Event";
   events.value.add(evt);
-  const result = await postEvent(session, evt);
-  //console.log('addEvent',result);
+  const { error } = await postEvent(session, evt);
+  if (error) console.log("addEvent", error);
 };
 
 const handleUpdateEvent = async (evt) => {
-  const result = await putEvent(session, evt);
-  //console.log('updateEvent',result);
+  const { error } = await putEvent(session, evt);
+  if (error) console.log("updateEvent", error);
 };
+
+//onMounted
+const loadEvents = async () => {
+  if (!events.value || !session.value) return;
+  loading.show({ message: 'Loading your calendar...' })
+  const evts = await getEvents(session);
+  index.value = max_index(evts);
+  events.value.set(evts);
+  loading.hide();
+};
+
+watch([cal, session], loadEvents);
 </script>
 
 <template>
@@ -120,7 +122,7 @@ const handleUpdateEvent = async (evt) => {
     <EventDialog
       v-model="currEvent"
       :imported="imported"
-      :isEditable = "isEditDialog"
+      :isEditable="isEditDialog"
       @add="addEvent"
       @update="editEventUpdate"
       @delete="editEventDelete"
@@ -128,7 +130,12 @@ const handleUpdateEvent = async (evt) => {
     />
   </q-dialog>
   <q-page>
-    <q-btn class="float" icon="add" @click="addDialogTrigger" size="lg">
+    <q-btn
+      class="float text-white bg-primary"
+      icon="add"
+      @click="addDialogTrigger"
+      size="lg"
+    >
       Add Event
     </q-btn>
     <CalendarView

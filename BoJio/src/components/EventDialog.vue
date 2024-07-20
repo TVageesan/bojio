@@ -7,7 +7,6 @@ const emit = defineEmits(['import','add','delete']);
 const url = ref('');
 const currEvent = defineModel();
 const { isEditable, imported } = defineProps(['isEditable', 'imported']);
-const importAttempt = ref(false);
 const regex = /^https:\/\/nusmods\.com\/timetable\/sem-[12]\/share$/;
 
 const confirmSend = (url) => {
@@ -47,7 +46,7 @@ const send = (url) => {
   <q-card style="min-width: 400px">
     <q-card-section class="q-pa-none bg-grey-3">
       <q-card-actions align="between">
-        <div class="text-h6 q-pl-sm">Create Event</div>
+        <div class="text-h6 q-pl-sm">{{ isEditable ? 'Edit Event':'Create Event'}}</div>
         <q-btn flat size="md" icon="close" color="black" v-close-popup />
       </q-card-actions>
     </q-card-section>

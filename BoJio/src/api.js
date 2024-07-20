@@ -60,11 +60,9 @@ export const postGroup = async (session, name) => {
   const created_id = resp.data[0].id;
   await supabase.from("user_groups").insert({user_id: getUser(session), group_id : created_id });
 }
-export const putGroup = (name,url,group_id) => supabase.from("groups").update({ name, url }).eq("id",group_id);
+export const putGroup = (name,group_id) => supabase.from("groups").update({ name }).eq("id",group_id);
 
 export const deleteGroup = (group_id) => supabase.from("groups").delete().eq("id",group_id);
-
-export const getGroupReferral = (group_id) => supabase.from("groups").select().eq('id',group_id);
 
 export const joinGroup = async (session,group_invite) => {
   const group  = await supabase.from("groups").select().eq("invite",group_invite);
@@ -75,21 +73,25 @@ export const joinGroup = async (session,group_invite) => {
 }
 
 export const uploadImage = async (session, file) => {
-  const fileExt = file.name.split('.').pop();
   const filePath = `${getUser(session)}/profile.jpeg`
-  const resp = await supabase.storage.from('avatars').upload(filePath, file,{upsert:true})
-  console.log('uploadImage resp',resp);
+  const { error } = await supabase.storage.from('avatars').upload(filePath, file, { upsert : true })
+  if (error) console.log('uploadImage error',error);
+}
+
+export const getProfileImage = async (user_id) => {
+  const path = `${user_id}/profile.jpeg`
+  let { data } = await supabase.storage.from('avatars').download(path)
+  if (!data){
+    const { data : placeholder } = await supabase.storage.from('avatars').download('public/placeholder.jpeg')
+    data = placeholder;
+  }
+  const url = URL.createObjectURL(data)
+  return url;
 }
 
 export const downloadImage = async (session) => {
   if (!session) return null;
-  const path = `${getUser(session)}/profile.jpeg`
-  let { data, error } = await supabase.storage.from('avatars').download(path)
-  if (!data){
-    data =  (await supabase.storage.from('avatars').download('public/placeholder.jpeg')).data;
-  };
-  const url = URL.createObjectURL(data)
-  return url;
+  return await getProfileImage(getUser(session));
 }
 
 //NUSModsAPI

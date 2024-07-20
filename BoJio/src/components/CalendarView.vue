@@ -84,13 +84,15 @@ const createCalendarStyling = () => {
   return calendars;
 };
 
+const calendars = createCalendarStyling();
+
 const calendarApp = createCalendar({
   selectedDate: getCurrentDate(),
   dayBoundaries: {
     start: "06:00",
     end: "23:59",
   },
-  calendars: createCalendarStyling(),
+  calendars,
   callbacks: {
     onEventUpdate(evt) {
       emit("update", evt);
@@ -104,7 +106,7 @@ const calendarApp = createCalendar({
 
 const valid = (attribute) => attribute && attribute != ''
 
-defineExpose({ events });
+defineExpose({ events, calendars });
 </script>
 
 <template>

@@ -1,50 +1,57 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
+
+const props = defineProps(["groups"]);
+const emit = defineEmits(["groupSelected", "groupAdd"]);
 const select = ref(-1);
-const isCollapsed = ref(false);
-const props = defineProps(['groups']);
-const emit = defineEmits(['groupSelected','groupAdd'])
-const search = ref('');
+const search = ref("");
 
 const filteredGroups = computed(() => {
   if (!search.value) {
     return props.groups;
   }
-  return props.groups.filter(group => group.name.toLowerCase().includes(search.value.toLowerCase()));
+  return props.groups.filter((group) =>
+    group.name.toLowerCase().includes(search.value.toLowerCase())
+  );
 });
 </script>
 
 <template>
-  <q-input rounded outlined v-model="search" placeholder="Search">
+  <q-input
+    rounded
+    outlined
+    v-model="search"
+    placeholder="Search"
+    class="q-pa-md"
+  >
     <template v-slot:prepend>
-        <q-icon name="search" />
+      <q-icon name="search" />
     </template>
   </q-input>
-  <q-list v-if="!isCollapsed" >
+  <q-list>
     <q-item
-      v-for="(group,index) in filteredGroups"
-      :key="index"
+      v-for="{ group_id, name, url } in filteredGroups"
+      :key="group_id"
       clickable
-      class = "section"
-      :class="{'selected-rounded':select == index}"
-      @click ="select=index;$emit('group-selected',index,group.name)">
-
+      class="section"
+      :class="{ 'selected-rounded': select == group_id }"
+      @click="
+        select = group_id;
+        $emit('group-selected', group_id);
+      "
+    >
       <q-item-section avatar>
-        <!-- <q-icon :name="item.icon" /> -->
-        <q-img src="https://cdn.quasar.dev/img/mountains.jpg"
-        class="rounded-image"
-        ratio="1"/>
+        <q-img :src="url" class="rounded-image" ratio="1" />
       </q-item-section>
 
       <q-item-section class="text-h6">
-        {{ group.name }}
+        {{ name }}
       </q-item-section>
-
     </q-item>
 
     <q-item class="row q-pb-md q-mb-md">
       <q-btn
-        class = "bg-green text-white col-grow q-ma-xs"
+        class="bg-green text-white col-grow q-ma-xs"
         icon="add"
         flat
         @click="$emit('group-add')"
@@ -53,20 +60,18 @@ const filteredGroups = computed(() => {
   </q-list>
 </template>
 
-<style scoped>
+<style lang="scss">
 .rounded-image {
   border-radius: 50%;
 }
 
-.q-item:hover:not(.selected-rounded){
+.q-item:hover:not(.selected-rounded) {
   background-color: grey-3;
   color: black;
-  border-radius: 10px;
 }
 
-.selected-rounded{
-  background-color: black;
+.selected-rounded {
+  background-color: $primary;
   color: white;
-  border-radius: 10px;
 }
 </style>

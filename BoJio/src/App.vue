@@ -11,6 +11,7 @@ const showNotify = (message) => {
 
 const session = ref(null);
 provide("session", session);
+provide("loading",$q.loading);
 
 const showDialog = computed(() => session.value == null);
 
@@ -40,11 +41,8 @@ const onSignUp = async (email, password,confirm) => {
   else {
     await createUser(session);
     $q.loading.show({ message: 'Loading your data. Hang on...'})
-    setTimeout(() => {
-      $q.loading.hide()
-    }, 2000)
   }
-  };
+};
 
 const onSignIn = async (email, password) => {
   if (email == ''){
@@ -61,21 +59,20 @@ const onSignIn = async (email, password) => {
   });
 
   if (error) showNotify(error.message);
-  else {$q.loading.show({ message: 'Loading your data. Hang on...'})
-    setTimeout(() => {
-      $q.loading.hide()
-    }, 2000)
+  else {
+    $q.loading.show({ message: 'Loading your data. Hang on...'})
   }
 };
 
 onMounted(() => {
   supabase.auth.getSession().then(({ data }) => {
     session.value = data.session;
-    console.log('my user id is',session.value.user.id)
+    if(data.session) $q.loading.hide();
   });
 
   supabase.auth.onAuthStateChange((_, _session) => {
     session.value = _session;
+    if(_session) $q.loading.hide();
   });
 });
 </script>

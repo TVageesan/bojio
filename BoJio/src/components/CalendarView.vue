@@ -121,44 +121,43 @@ defineExpose({ events, calendars });
           </q-card-actions>
           <q-card-section class="q-pa-none q-ma-none q-pt-sm">
             <q-list>
-              <q-item class="q-pt-none">
-                <q-item-section avatar v-if="valid(calendarEvent.location) || Array.isArray(calendarEvent.people) || valid(calendarEvent.description)">
-                  <q-icon name="location_on" class="text-white"/>
-                </q-item-section>
-                <q-item-section>
-                  <div class="text-h6">{{ calendarEvent.title }}</div>
-                  <div class="text-body">{{ toTimeRange(calendarEvent.start, calendarEvent.end) }}</div>
-                </q-item-section>
-              </q-item>
-              <q-item v-if="valid(calendarEvent.location)">
-                <q-item-section avatar>
-                  <q-icon name="location_on"/>
-                </q-item-section>
-                <q-item-section>
-                  {{ calendarEvent.location }}
-                </q-item-section>
-              </q-item>
-              <q-item v-if = "Array.isArray(calendarEvent.people)">
-                <q-item-section avatar>
-                  <q-img :src="profiles[calendarEvent.user_id].url " />
-                </q-item-section>
-                <q-item-section>
-                  {{ calendarEvent.people[0] }}
-                </q-item-section>
-              </q-item>
-              <q-item v-if="valid(calendarEvent.description)">
-                <q-item-section avatar>
-                  <q-icon name="subject"/>
-                </q-item-section>
-                <q-item-section>
-                  {{  calendarEvent.description }}
-                </q-item-section>
-              </q-item>
-            </q-list>
+      <q-item class="q-pt-none">
+        <q-item-section avatar v-if="valid(calendarEvent.location) || Array.isArray(calendarEvent.people) || valid(calendarEvent.description)">
+          <q-icon name="location_on" class="text-white center-icon"/>
+        </q-item-section>
+        <q-item-section>
+          <div class="text-h6">{{ calendarEvent.title }}</div>
+          <div class="text-body">{{ toTimeRange(calendarEvent.start, calendarEvent.end) }}</div>
+        </q-item-section>
+      </q-item>
+      <q-item v-if="valid(calendarEvent.location)">
+        <q-item-section avatar>
+          <q-icon class="q-pl-sm" name="location_on"/>
+        </q-item-section>
+        <q-item-section>
+          {{ calendarEvent.location }}
+        </q-item-section>
+      </q-item>
+      <q-item v-if="Array.isArray(calendarEvent.people)">
+        <q-item-section avatar>
+          <q-img :src="profiles[calendarEvent.user_id].url" />
+        </q-item-section>
+        <q-item-section>
+          {{ calendarEvent.people[0] }}
+        </q-item-section>
+      </q-item>
+      <q-item v-if="valid(calendarEvent.description)">
+        <q-item-section avatar>
+          <q-icon class="q-pl-sm" name="subject"/>
+        </q-item-section>
+        <q-item-section>
+          {{ calendarEvent.description }}
+        </q-item-section>
+      </q-item>
+    </q-list>
           </q-card-section>
         </q-card>
       </template>
     </ScheduleXCalendar>
   </div>
 </template>
-

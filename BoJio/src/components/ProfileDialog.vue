@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject } from 'vue';
-import { uploadImage, downloadImage, getUsername, putUsername, logoutUser, getEmail, putEmail } from 'src/api.js';
+import { uploadImage, downloadImage, getUsername, putUsername, logoutUser, getEmail, putEmail, resetPassword } from 'src/api.js';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -39,6 +39,10 @@ const save = async () => {
   const emailResult = await putEmail(session, email.value);
   console.log('nameResult', nameResult);
   console.log('emailResult', emailResult);
+}
+
+const requestPasswordReset = async () => {
+    const { data, error } = await resetPassword(email.value);
 }
 
 onMounted(async () => {
@@ -126,6 +130,7 @@ onMounted(async () => {
 
           <q-card-actions align="right">
             <q-btn size="md" unelevated label="Save" color="green" class="q-pr-sm" @click="save" v-close-popup />
+            <q-btn size="md" unelevated label="Reset Password" color="red" @click="requestPasswordReset" v-close-popup />
             <q-btn size="md" unelevated label="Logout" color="black" @click="logout" v-close-popup />
           </q-card-actions>
         </q-card-section>

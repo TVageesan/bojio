@@ -43,8 +43,11 @@ export const putEmail = async (session, newEmail) => {
   });
   return { data, error };
 };
-//TODO password
 
+export const resetPassword = async (email) => {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+  return { data, error };
+};
 
 export const getEvents = async (session) => {
   const { data } = await supabase.from("events").select().eq("user_id", getUser(session));

@@ -11,7 +11,6 @@ const session = inject('session');
 const text = ref('New user');
 const url = ref(null);
 const email = ref('Email');
-const password = ref('Password');
 
 const upload = async () => {
   if (!uploading.value) {
@@ -35,13 +34,11 @@ const logout = async () => {
 }
 
 const save = async () => {
-  console.log('sending,', text.value, email.value, password.value);
+  console.log('sending,', text.value, email.value);
   const nameResult = await putUsername(session, text.value);
   const emailResult = await putEmail(session, email.value);
-  const passwordResult = await putPassword(session, password.value);
   console.log('nameResult', nameResult);
   console.log('emailResult', emailResult);
-  console.log('passwordResult', passwordResult);
 }
 
 onMounted(async () => {
@@ -117,21 +114,6 @@ onMounted(async () => {
               <div class="text-h6">Email: {{ email }}</div>
               <q-icon size="sm" color="grey" name="edit" class="icon">
                 <q-popup-edit v-model="email" class="bg-primary text-white" v-slot="scope">
-                  <q-input dark color="white" v-model="scope.value" dense autofocus counter @keyup.enter="scope.set">
-                    <template v-slot:append>
-                      <q-icon name="check" @click="scope.set" />
-                    </template>
-                  </q-input>
-                </q-popup-edit>
-              </q-icon>
-            </div>
-          </q-card-section>
-
-          <q-card-section class="row justify-center edit">
-            <div class="row items-center cursor-pointer">
-              <div class="text-h6">Password: {{ password }}</div>
-              <q-icon size="sm" color="grey" name="edit" class="icon">
-                <q-popup-edit v-model="password" class="bg-primary text-white" v-slot="scope">
                   <q-input dark color="white" v-model="scope.value" dense autofocus counter @keyup.enter="scope.set">
                     <template v-slot:append>
                       <q-icon name="check" @click="scope.set" />

@@ -37,11 +37,12 @@ export const getEmail = async (session) => {
   return user.email;
 }
 
-export const putEmail = async(session, newEmail) => {
+export const putEmail = async (session, newEmail) => {
   const { data, error } = await supabase.auth.updateUser({
-    email: 'newEmail'
-  })
-}
+    email: newEmail,
+  });
+  return { data, error };
+};
 //TODO password
 
 

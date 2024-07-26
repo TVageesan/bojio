@@ -82,21 +82,23 @@ onMounted(async () => {
 
         <q-card-section class="q-pa-none">
           <q-card-section avatar class="row justify-center items-end edit">
-            <div>
-              <q-avatar color="black" style="width:200px;height:200px;">
-                <img class="q-pa-xs" loading="eager" :src="url" />
-              </q-avatar>
-              <q-icon size="sm" class="text-grey icon" name="edit">
-                <q-popup-edit v-model="text" class="text-white">
-                  <q-file outlined v-model="uploading" label="Upload a new profile picture">
-                    <template v-slot:append>
-                      <q-btn icon="upload" flat @click="upload" />
-                    </template>
-                  </q-file>
-                </q-popup-edit>
-              </q-icon>
-            </div>
-          </q-card-section>
+              <div>
+                <q-avatar color="black" style="width:200px;height:200px;">
+                  <img class="q-pa-xs" loading="eager" :src="url" />
+                  <q-tooltip anchor="center left" self="center right" style="white-space: nowrap">
+                    Click to upload a new profile picture
+                  </q-tooltip>
+                  <q-popup-edit v-model="text" class="text-white">
+                    <q-file outlined v-model="uploading" label="Upload a new profile picture">
+                      <template v-slot:append>
+                        <q-btn icon="upload" flat @click="upload" />
+                      </template>
+                    </q-file>
+                  </q-popup-edit>
+                </q-avatar>
+              </div>
+            </q-card-section>
+
 
           <q-card-section class="row justify-center edit">
             <div class="row items-center cursor-pointer">

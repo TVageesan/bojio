@@ -36,6 +36,23 @@ export const getUsername = (session) => supabase.from("users").select().eq("id",
 
 export const putUsername = (session,name) => supabase.from("users").update({name}).eq("id",getUser(session)).select();
 
+export const getEmail = async (session) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  return user.email;
+}
+
+export const putEmail = async (session, newEmail) => {
+  const { data, error } = await supabase.auth.updateUser({
+    email: newEmail,
+  });
+  return { data, error };
+};
+
+export const resetPassword = async (email) => {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+  return { data, error };
+};
+
 export const getEvents = async (session) => {
   const { data } = await supabase.from("events").select().eq("user_id", getUser(session));
   return data.map(e => evtToFetch(e));

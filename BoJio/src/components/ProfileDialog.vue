@@ -1,6 +1,7 @@
 <script setup>
-import { ref, inject} from 'vue';
+import { ref, inject } from 'vue';
 import { uploadImage, downloadImage, getUsername, putUsername, logoutUser, getEmail, putEmail, resetPassword } from 'src/api.js';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -13,11 +14,17 @@ const email = ref('Email');
 
 const upload = async () => {
   if (!uploading.value) {
+    console.log('no file to upload');
     return;
   }
-  await uploadImage(session, uploading.value);
+  if (url.value == '') {
+    console.log('uploading', uploading.value);
+    uploadImage(session, uploading.value);
+  } else {
+    console.log('url check failed', url.value);
+    uploadImage(session, uploading.value);
+  }
   url.value = URL.createObjectURL(uploading.value);
-  console.log()
   uploading.value = null;
 }
 
@@ -38,14 +45,14 @@ const requestPasswordReset = async () => {
     const { data, error } = await resetPassword(email.value);
 }
 
-const loadData = async () => {
+onMounted(async () => {
   url.value = await downloadImage(session);
 
   const user = (await getUsername(session)).data[0];
   if (user) text.value = user.name;
 
   email.value = await getEmail(session);
-};
+});
 </script>
 
 <template>

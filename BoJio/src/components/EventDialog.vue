@@ -87,6 +87,7 @@ const send = (url) => {
           <q-icon name="subject" class="text-grey-6" />
         </template>
       </q-input>
+      <q-toggle v-model="currEvent.recurring" label="Weekly" class="q-mb-md" />
     </q-card-section>
     <q-card-actions v-if="isEditable" align="right">
       <q-btn

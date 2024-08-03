@@ -11,7 +11,7 @@ import {
   importEvents,
 } from "src/api";
 import { watch, ref, computed, inject } from "vue";
-import { toTime, toTimePlusHour } from "src/utils/getDate";
+import { toTime, toTimePlusHour, addWeek } from "src/utils/getDate";
 
 const session = inject("session");
 const loading = inject("loading");
@@ -74,6 +74,7 @@ const newEvent = () => {
     end: toTimePlusHour(current),
     location: "",
     description: "",
+    recurring: false,
   };
 };
 
@@ -91,12 +92,23 @@ const editEventDelete = async (id = currEvent.value.id) => {
   if (error) console.log("deleteEvent", error);
 };
 
-const addEvent = async () => {
-  const evt = { ...currEvent.value, id: ++index.value };
+const addEvent = async (newEvt = currEvent.value ) => {
+  const evt = { ...newEvt, id: ++index.value };
   if (evt.title == "") evt.title = "New Event";
   events.value.add(evt);
   const { error } = await postEvent(session, evt);
   if (error) console.log("addEvent", error);
+  console.log('addEvent',newEvt.count);
+  if (evt.recurring){
+    if (evt.count == 0) return;
+    if (evt.count == undefined) evt.count = 9;
+    addEvent({
+      ...evt,
+      start: addWeek(evt.start),
+      end: addWeek(evt.end),
+      count: evt.count - 1
+    })
+  }
 };
 
 const handleUpdateEvent = async (evt) => {
